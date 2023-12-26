@@ -16,122 +16,56 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
+        background-color: #f4f4f4;
         margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      #room-selection {
-        background-color: #4caf50;
-        color: white;
         padding: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        color: #333;
       }
 
-      #room-selection input,
-      #room-selection button {
-        margin: 0 10px;
-      }
-
-      #messages {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 20px;
-        background: #fff;
-        border-top: 1px solid #ddd;
-        border-bottom: 1px solid #ddd;
-      }
-
-      #messages li {
-        margin-bottom: 10px;
-        line-height: 1.4;
-      }
-
+      #room-selection,
+      .myAddress,
       #form {
-        display: flex;
+        margin-bottom: 20px;
+      }
+
+      input,
+      button {
         padding: 10px;
-        background: #333;
-        color: #fff;
-        width: 100%;
+        margin: 5px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
       }
 
-      #form input,
-      #form button {
-        padding: 10px;
-        margin-right: 10px;
-        border: none;
-        border-radius: 4px;
-      }
-
-      #form input {
-        flex-grow: 1;
-      }
-
-      #form button {
-        background-color: #2196f3;
+      button {
+        background-color: #4285f4;
         color: white;
         cursor: pointer;
       }
 
-      #form button:hover {
-        background-color: #0b7dda;
+      button:hover {
+        background-color: #357ae8;
       }
 
-      .myAddress p {
-        text-align: center;
-        color: #333;
+      #messages {
+        list-style-type: none;
+        padding: 0;
       }
-      /* current room */
-      #currentRoom {
-        font-weight: bold;
+
+      #messages li {
+        margin-bottom: 10px;
+        background-color: #e9e9e9;
+        padding: 10px;
+        border-radius: 5px;
       }
-      /* my address */
-      #myAddress {
-        font-weight: bold;
-      }
-      /* media max */
-      /* Improved Media Queries for Mobile Devices */
+
       @media (max-width: 600px) {
         body {
-          padding: 5px; /* Smaller padding for body */
-          word-wrap: break-word;
+          padding: 5px;
         }
 
-        #room-selection {
-          flex-direction: column;
-          padding: 10px; /* Increased padding */
-        }
-
-        #room-selection input,
-        #room-selection button {
-          margin: 5px 0; /* Adjusted margin */
-        }
-
-        #form {
-          flex-direction: column;
-          width: 90%;
-          margin: 0 auto;
-        }
-
-        #form input,
-        #form button {
-          margin: 5px 0; /* Adjusted margin */
-          /* width: 100%; */
-        }
-        #messages {
-          padding: 5px; /* Smaller padding for messages */
-        }
-        #messages li {
-          font-size: 1.2em; /* Larger font size for readability */
-        }
-
-        .myAddress p {
-          font-size: 1em; /* Larger font size for readability */
+        input,
+        button {
+          width: calc(100% - 20px);
         }
       }
     </style>
