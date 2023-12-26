@@ -10,7 +10,8 @@
     <meta name="author" content="SatoChat" />
     <!-- favicon -->
     <!-- <link rel="icon" href="favicon.ico" /> -->
-
+    <!-- crypto js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://unpkg.com/bsv@1.5"></script>
     <title>SatoChat</title>
     <style>
@@ -230,9 +231,17 @@
         // Load old messages
         socket.on("load old messages", function (data) {
           data.forEach((message) => {
+            if (message.roomHash && message.encryptedMessage) {
+              message.decrypted = decrypt(
+                message.encryptedMessage,
+                message.roomHash
+              );
+            } else {
+              message.decrypted = message.message;
+            }
             $("#messages").append(
               $("<li>").text(
-                `${message.timestamp} - ${message.username}: ${message.message}`
+                `${message.timestamp} - ${message.username}: ${message.decrypted}`
               )
             );
           });
@@ -251,8 +260,13 @@
           }
           socket.emit("chat message", {
             room: currentRoom,
+            roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
             username: $("#username").val(),
-            message: $("#input").val(),
+            // message: $("#input").val(),
+            encryptedMessage: encrypt(
+              $("#input").val(),
+              sha256(Buffer.from(currentRoom)).toString("hex")
+            ),
             timestamp: new Date().toLocaleString(),
           });
           $("#input").val("");
@@ -261,9 +275,14 @@
 
         // Receiving chat messages
         socket.on("chat message", function (data) {
+          if (data.roomHash && data.encryptedMessage) {
+            data.decrypted = decrypt(data.encryptedMessage, data.roomHash);
+          } else {
+            data.decrypted = data.message;
+          }
           $("#messages").append(
             $("<li>").text(
-              `${data.timestamp} - ${data.username}: ${data.message}`
+              `${data.timestamp} - ${data.username}: ${data.decrypted}`
             )
           );
         });
@@ -276,6 +295,17 @@
           window.location.href = window.location.href + "?room=" + selectedRoom;
         }
       });
+
+      const encrypt = (message, password) => {
+        const encrypted = CryptoJS.AES.encrypt(message, password).toString();
+        return encrypted;
+      };
+      const decrypt = (encrypted, password) => {
+        const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(
+          CryptoJS.enc.Utf8
+        );
+        return decrypted;
+      };
     </script>
   </body>
 </html>
