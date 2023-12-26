@@ -300,7 +300,7 @@
             }
             $("#messages").append(
               $("<li>").text(
-                `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted}`
+                `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted} <br> ${message.address}`
               )
             );
           });
@@ -327,6 +327,7 @@
             // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
             username: encryptedUserName,
             // message: $("#input").val(),
+            address: keys.address.toString(),
             encryptedMessage: encrypt($("#input").val(), roomHash),
             timestamp: new Date().toLocaleString(),
           });
@@ -344,7 +345,7 @@
           }
           $("#messages").append(
             $("<li>").text(
-              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
+              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted} <br> ${data.address}`
             )
           );
           if (
