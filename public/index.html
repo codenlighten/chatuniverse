@@ -140,9 +140,12 @@
     <script>
       const Buffer = bsv.deps.Buffer;
       const sha256 = bsv.crypto.Hash.sha256;
+      const hash256 = bsv.crypto.Hash.sha256sha256;
       const waterSound = new Audio("/water.mp3");
 
       let currentUserName = "";
+      let currentRoomHash = "";
+      let roomHash = "";
       //default muted
       document.getElementById("mute").checked = true;
       const chatKeys = () => {
@@ -187,6 +190,7 @@
       console.log(uuid);
       const address = keys.address.toString();
       var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
+      roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
       document.getElementById("room-name").value = currentRoom;
 
       $(function () {
@@ -198,7 +202,9 @@
         if (room) {
           currentRoom = room; // Update current room based on URL
           document.getElementById("room-name").value = room;
-          socket.emit("join room", room);
+          roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+          currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+          socket.emit("join room", currentRoomHash);
           document.getElementById("currentRoom").innerHTML = room;
           document.getElementById("currentRoom").setAttribute("title", room);
           // Add room to previous rooms list
@@ -230,7 +236,9 @@
             currentRoom = currentRoom + "-" + uuidv4().slice(-4);
             document.getElementById("room-name").value = currentRoom;
           }
-          socket.emit("join room", currentRoom);
+          roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+          currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+          socket.emit("join room", currentRoomHash);
           document.getElementById("currentRoom").innerHTML = currentRoom;
           document
             .getElementById("currentRoom")
@@ -250,23 +258,11 @@
           $("#messages").html(""); // Clear chat messages
         });
 
-        // Event listener for copying room link
-        document
-          .getElementById("currentRoom")
-          .addEventListener("click", function () {
-            let urlWithRoom = window.location.href + "?room=" + currentRoom;
-            navigator.clipboard.writeText(urlWithRoom);
-            alert("Copied room link to clipboard");
-          });
-
         // Load old messages
         socket.on("load old messages", function (data) {
           data.forEach((message) => {
-            if (message.roomHash && message.encryptedMessage) {
-              message.decrypted = decrypt(
-                message.encryptedMessage,
-                message.roomHash
-              );
+            if (roomHash && message.encryptedMessage) {
+              message.decrypted = decrypt(message.encryptedMessage, roomHash);
             } else {
               message.decrypted = "Error decrypting message";
             }
@@ -290,16 +286,15 @@
             return false;
           }
           currentUserName = $("#username").val();
+          roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+          currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           // localStorage.setItem("name", currentUserName);
           socket.emit("chat message", {
-            room: currentRoom,
-            roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
+            room: currentRoomHash,
+            // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
             username: $("#username").val(),
             // message: $("#input").val(),
-            encryptedMessage: encrypt(
-              $("#input").val(),
-              sha256(Buffer.from(currentRoom)).toString("hex")
-            ),
+            encryptedMessage: encrypt($("#input").val(), roomHash),
             timestamp: new Date().toLocaleString(),
           });
           $("#input").val("");
@@ -308,8 +303,8 @@
 
         // Receiving chat messages
         socket.on("chat message", function (data) {
-          if (data.roomHash && data.encryptedMessage) {
-            data.decrypted = decrypt(data.encryptedMessage, data.roomHash);
+          if (roomHash && data.encryptedMessage) {
+            data.decrypted = decrypt(data.encryptedMessage, roomHash);
           } else {
             data.decrypted = "Error decrypting message";
           }
