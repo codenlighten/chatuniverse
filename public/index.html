@@ -319,6 +319,10 @@
 
       // Share room button
       $("#shareRoom").click(function () {
+        if (currentRoom === "") {
+          alert("Please enter a room name");
+          return false;
+        }
         let urlWithRoom = window.location.href + "?room=" + currentRoom;
         navigator.clipboard.writeText(urlWithRoom);
         alert("Copied room link to clipboard");
