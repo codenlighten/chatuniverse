@@ -87,6 +87,11 @@
         <p>Current Room: <span id="currentRoom"></span></p>
         <p>My Address: <span id="myAddress"></span></p>
       </div>
+      <!-- mute option -->
+      <div class="mute">
+        <input type="checkbox" id="mute" />
+        <label for="mute">Mute</label>
+      </div>
       <ul id="messages"></ul>
 
       <form id="form" action="">
@@ -116,6 +121,7 @@
     <script>
       const Buffer = bsv.deps.Buffer;
       const sha256 = bsv.crypto.Hash.sha256;
+      let currentUserName = "";
       const chatKeys = () => {
         const privateKey = new bsv.PrivateKey();
         const publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
@@ -237,7 +243,7 @@
                 message.roomHash
               );
             } else {
-              message.decrypted = message.message;
+              message.decrypted = "Error decrypting message";
             }
             $("#messages").append(
               $("<li>").text(
@@ -258,6 +264,8 @@
             alert("Please enter a username, message, and room name");
             return false;
           }
+          currentUserName = $("#username").val();
+          // localStorage.setItem("name", currentUserName);
           socket.emit("chat message", {
             room: currentRoom,
             roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
@@ -274,17 +282,23 @@
         });
 
         // Receiving chat messages
+        const waterSound = new Audio("/water.mp3");
         socket.on("chat message", function (data) {
           if (data.roomHash && data.encryptedMessage) {
             data.decrypted = decrypt(data.encryptedMessage, data.roomHash);
           } else {
-            data.decrypted = data.message;
+            data.decrypted = "Error decrypting message";
           }
           $("#messages").append(
             $("<li>").text(
               `${data.timestamp} - ${data.username}: ${data.decrypted}`
             )
           );
+          if (
+            !document.getElementById("mute").checked &&
+            data.username !== currentUserName
+          )
+            waterSound.play();
         });
       });
 
