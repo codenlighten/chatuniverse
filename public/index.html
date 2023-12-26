@@ -342,6 +342,17 @@
         }
         let urlWithRoom = window.location.href + "?room=" + currentRoom;
         navigator.clipboard.writeText(urlWithRoom);
+        //copy for mobile devices
+        const el = document.createElement("textarea");
+        el.value = urlWithRoom;
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+
         alert("Copied room link to clipboard");
         document
           .getElementById("currentRoom")
