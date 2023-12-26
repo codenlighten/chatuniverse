@@ -21,7 +21,7 @@
         padding: 0;
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        min-height: 100vh;
       }
 
       #room-selection {
@@ -56,6 +56,8 @@
         display: flex;
         padding: 10px;
         background: #333;
+        color: #fff;
+        width: 100%;
       }
 
       #form input,
@@ -92,6 +94,46 @@
       #myAddress {
         font-weight: bold;
       }
+      /* media max */
+      /* Improved Media Queries for Mobile Devices */
+      @media (max-width: 600px) {
+        body {
+          padding: 5px; /* Smaller padding for body */
+          word-wrap: break-word;
+        }
+
+        #room-selection {
+          flex-direction: column;
+          padding: 10px; /* Increased padding */
+        }
+
+        #room-selection input,
+        #room-selection button {
+          margin: 5px 0; /* Adjusted margin */
+        }
+
+        #form {
+          flex-direction: column;
+          width: 90%;
+          margin: 0 auto;
+        }
+
+        #form input,
+        #form button {
+          margin: 5px 0; /* Adjusted margin */
+          /* width: 100%; */
+        }
+        #messages {
+          padding: 5px; /* Smaller padding for messages */
+        }
+        #messages li {
+          font-size: 1.2em; /* Larger font size for readability */
+        }
+
+        .myAddress p {
+          font-size: 1em; /* Larger font size for readability */
+        }
+      }
     </style>
   </head>
   <body>
@@ -117,7 +159,11 @@
         autocomplete="off"
         required
       />
-      <input id="input" autocomplete="off" /><button id="send">Send</button>
+      <input id="input" placeholder="enter message" autocomplete="off" /><button
+        id="send"
+      >
+        Send
+      </button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -187,10 +233,18 @@
 
         $("form").submit(function (e) {
           e.preventDefault(); // prevents page reloading
+          //   if missing any fields, alert and return
+          if (
+            $("#username").val() === "" ||
+            $("#input").val() === "" ||
+            currentRoom === ""
+          ) {
+            alert("Please enter a username, message, and room name");
+            return false;
+          }
           socket.emit("chat message", {
             room: currentRoom,
             username: $("#username").val(),
-            // address: keys.address.toString(),
             message: $("#input").val(),
             timestamp: new Date().toLocaleTimeString(),
           });
