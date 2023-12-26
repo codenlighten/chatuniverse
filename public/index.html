@@ -349,17 +349,18 @@
           } else {
             data.decrypted = "Error decrypting message";
           }
-          $("#messages").append(
-            $("<li>").text(
-              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
-            )
-          );
           // append address to message as new line
-          $("#messages").append(
+          $("#messages").prepend(
             $("<p>")
               .text(`Author Address: ${data.address}`)
               .css("font-size", "10px")
           );
+          $("#messages").prepend(
+            $("<li>").text(
+              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
+            )
+          );
+
           if (
             !document.getElementById("mute").checked &&
             data.username !== currentUserName
