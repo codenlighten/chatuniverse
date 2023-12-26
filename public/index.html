@@ -319,7 +319,7 @@
 
       // Share room button
       $("#shareRoom").click(function () {
-        if (currentRoom === "") {
+        if (document.getElementById("currentRoom").innerHTML === "") {
           alert("Please enter a room name");
           return false;
         }
