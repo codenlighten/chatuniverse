@@ -158,6 +158,14 @@
           currentRoom = $("#room-name").val();
           socket.emit("join room", currentRoom);
           document.getElementById("currentRoom").innerHTML = currentRoom;
+          //   addevtlistener for click on room name to copy to clipboard
+          document
+            .getElementById("currentRoom")
+            .addEventListener("click", function () {
+              let urlWithRoom = window.location.href + "?room=" + currentRoom;
+              navigator.clipboard.writeText(urlWithRoom);
+              alert("Copied room link to clipboard");
+            });
           $("#messages").html(""); // Clear the chat messages
         });
 
@@ -182,6 +190,13 @@
           );
         });
       });
+      //check query string for room
+      const urlParams = new URLSearchParams(window.location.search);
+      const room = urlParams.get("room");
+      if (room) {
+        document.getElementById("room-name").value = room;
+        document.getElementById("join-room").click();
+      }
     </script>
   </body>
 </html>
