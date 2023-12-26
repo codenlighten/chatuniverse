@@ -202,6 +202,8 @@
           document.getElementById("currentRoom").innerHTML = room;
           document.getElementById("currentRoom").setAttribute("title", room);
           // Add room to previous rooms list
+          //remove from url
+          window.history.replaceState({}, document.title, "/");
           if (!previousRooms.includes(room)) {
             previousRooms.push(room);
             localStorage.setItem(
