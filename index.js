@@ -27,7 +27,16 @@ io.on("connection", (socket) => {
     try {
       const messagesRef = db.ref(`rooms/${room}/messages`);
       const messagesSnap = await messagesRef.get();
-      const messages = messagesSnap.val() || [];
+      let messages = messagesSnap.val() || {};
+
+      // Transform the messages object into an array
+      messages = Object.values(messages);
+      //order messages by timestamp with the most recent first
+      // example     timestamp: '12/26/2023, 9:11:38 AM'
+      messages.sort((a, b) => {
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+      console.log(messages);
       socket.emit("load old messages", messages);
     } catch (err) {
       console.error(err);

@@ -141,49 +141,52 @@
       };
       var uuid = uuidv4();
       console.log(uuid);
-      //room is last 4 digits of uuid
       const address = keys.address.toString();
-      currentRoom = address + "-" + uuid.slice(-4);
+      var currentRoom = address + "-" + uuid.slice(-4); // Global current room variable
       document.getElementById("room-name").value = currentRoom;
 
       $(function () {
         var socket = io();
-        var currentRoom = "";
-        //check query string for room
+
+        // Check query string for room
         const urlParams = new URLSearchParams(window.location.search);
         const room = urlParams.get("room");
         if (room) {
+          currentRoom = room; // Update current room based on URL
           document.getElementById("room-name").value = room;
-          //   document.getElementById("join-room").click();
         }
+
         $("#join-room").click(function () {
           currentRoom = $("#room-name").val();
           socket.emit("join room", currentRoom);
           document.getElementById("currentRoom").innerHTML = currentRoom;
-          //   addevtlistener for click on room name to copy to clipboard
-          document
-            .getElementById("currentRoom")
-            .addEventListener("click", function () {
-              let urlWithRoom = window.location.href + "?room=" + currentRoom;
-              navigator.clipboard.writeText(urlWithRoom);
-              alert("Copied room link to clipboard");
-            });
-          $("#messages").html(""); // Clear the chat messages
-          //load old messages from response to join room
-          socket.on("join room", function (data) {
-            data.forEach((message) =>
-              $("#messages").append(
-                $("<li>").text(
-                  `${message.timestamp} - ${message.username}: ${message.message}`
-                )
+
+          $("#messages").html(""); // Clear chat messages
+        });
+
+        // Event listener for copying room link
+        document
+          .getElementById("currentRoom")
+          .addEventListener("click", function () {
+            let urlWithRoom = window.location.href + "?room=" + currentRoom;
+            navigator.clipboard.writeText(urlWithRoom);
+            alert("Copied room link to clipboard");
+          });
+
+        // Load old messages
+        socket.on("load old messages", function (data) {
+          data.forEach((message) => {
+            $("#messages").append(
+              $("<li>").text(
+                `${message.timestamp} - ${message.username}: ${message.message}`
               )
             );
           });
         });
 
+        // Chat message form submission
         $("form").submit(function (e) {
-          e.preventDefault(); // prevents page reloading
-          //   if missing any fields, alert and return
+          e.preventDefault(); // Prevents page reloading
           if (
             $("#username").val() === "" ||
             $("#input").val() === "" ||
@@ -196,12 +199,13 @@
             room: currentRoom,
             username: $("#username").val(),
             message: $("#input").val(),
-            timestamp: new Date().toLocaleTimeString(),
+            timestamp: new Date().toLocaleString(),
           });
           $("#input").val("");
           return false;
         });
 
+        // Receiving chat messages
         socket.on("chat message", function (data) {
           $("#messages").append(
             $("<li>").text(
