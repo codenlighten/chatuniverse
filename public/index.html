@@ -326,6 +326,10 @@
         let urlWithRoom = window.location.href + "?room=" + currentRoom;
         navigator.clipboard.writeText(urlWithRoom);
         alert("Copied room link to clipboard");
+        document
+          .getElementById("currentRoom")
+          .setAttribute("title", currentRoom);
+        document.getElementById("currentRoom").innerHTML = currentRoom;
       });
 
       const encrypt = (message, password) => {
