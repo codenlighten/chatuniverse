@@ -300,8 +300,12 @@
             }
             $("#messages").append(
               $("<li>").text(
-                `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted} <br> ${message.address}`
+                `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted}`
               )
+            );
+            // append address to message as new line
+            $("#messages").append(
+              $("<p>").text(`${message.address}`).css("font-size", "10px")
             );
           });
         });
@@ -345,8 +349,12 @@
           }
           $("#messages").append(
             $("<li>").text(
-              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted} <br> ${data.address}`
+              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
             )
+          );
+          // append address to message as new line
+          $("#messages").append(
+            $("<p>").text(`${data.address}`).css("font-size", "10px")
           );
           if (
             !document.getElementById("mute").checked &&
