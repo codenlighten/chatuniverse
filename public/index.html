@@ -140,7 +140,11 @@
     <script>
       const Buffer = bsv.deps.Buffer;
       const sha256 = bsv.crypto.Hash.sha256;
+      const waterSound = new Audio("/water.mp3");
+
       let currentUserName = "";
+      //default muted
+      document.getElementById("mute").checked = true;
       const chatKeys = () => {
         const privateKey = new bsv.PrivateKey();
         const publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
@@ -301,7 +305,6 @@
         });
 
         // Receiving chat messages
-        const waterSound = new Audio("/water.mp3");
         socket.on("chat message", function (data) {
           if (data.roomHash && data.encryptedMessage) {
             data.decrypted = decrypt(data.encryptedMessage, data.roomHash);
@@ -354,6 +357,14 @@
         );
         return decrypted;
       };
+      //mute option add event listener to test audio
+      document.getElementById("mute").addEventListener("change", (e) => {
+        if (e.target.checked) {
+          waterSound.pause();
+        } else {
+          waterSound.play();
+        }
+      });
     </script>
   </body>
 </html>
