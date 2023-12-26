@@ -154,15 +154,22 @@
           }
         );
       };
+      var uuid = uuidv4();
+      console.log(uuid);
+      //room is last 4 digits of uuid
+      currentRoom = uuid.slice(-4);
+      document.getElementById("room-name").value = currentRoom;
+
       $(function () {
         var socket = io();
         var currentRoom = "";
-
-        var uuid = uuidv4();
-        console.log(uuid);
-        //room is last 4 digits of uuid
-        currentRoom = uuid.slice(-4);
-        document.getElementById("room-name").value = currentRoom;
+        //check query string for room
+        const urlParams = new URLSearchParams(window.location.search);
+        const room = urlParams.get("room");
+        if (room) {
+          document.getElementById("room-name").value = room;
+          //   document.getElementById("join-room").click();
+        }
         $("#join-room").click(function () {
           currentRoom = $("#room-name").val();
           socket.emit("join room", currentRoom);
@@ -199,13 +206,6 @@
           );
         });
       });
-      //check query string for room
-      const urlParams = new URLSearchParams(window.location.search);
-      const room = urlParams.get("room");
-      if (room) {
-        document.getElementById("room-name").value = room;
-        document.getElementById("join-room").click();
-      }
     </script>
   </body>
 </html>
