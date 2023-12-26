@@ -75,6 +75,14 @@
         text-align: center;
         color: #333;
       }
+      /* current room */
+      #currentRoom {
+        font-weight: bold;
+      }
+      /* my address */
+      #myAddress {
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -84,7 +92,10 @@
       <input id="room-name" type="text" placeholder="Room name" />
       <button id="join-room">Join Room</button>
     </div>
+
     <div class="myAddress">
+      <!-- current room -->
+      <p>Current Room: <span id="currentRoom"></span></p>
       <p>My Address: <span id="myAddress"></span></p>
     </div>
     <ul id="messages"></ul>
@@ -146,6 +157,7 @@
         $("#join-room").click(function () {
           currentRoom = $("#room-name").val();
           socket.emit("join room", currentRoom);
+          document.getElementById("currentRoom").innerHTML = currentRoom;
           $("#messages").html(""); // Clear the chat messages
         });
 
