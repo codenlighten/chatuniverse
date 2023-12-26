@@ -17,21 +17,21 @@
     <style>
       body {
         font-family: "Poppins", sans-serif;
-        background-color: #f3f4f6; /* Lighter shade for better contrast */
-        color: #334155; /* Darker text for better readability */
+        background-color: #f3f4f6;
+        color: #334155;
         line-height: 1.6;
       }
 
       .main-container {
         max-width: 600px;
         margin: 0 auto;
-        padding: 0 20px;
-        text-align: center; /* Center align for better presentation */
+        padding: 20px;
+        text-align: left;
       }
 
       h1 {
-        color: #2563eb; /* Brighter blue for more impact */
-        font-size: 2.5em; /* Larger size for prominence */
+        color: #2563eb;
+        font-size: 2.5rem;
         margin-bottom: 0.8em;
       }
 
@@ -39,87 +39,68 @@
       button {
         padding: 15px 25px;
         margin: 10px 0;
-        border: 2px solid #cbd5e1; /* Subtle border color */
+        border: none;
         border-radius: 8px;
         transition: all 0.3s ease;
       }
 
+      input {
+        width: 100%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
       button {
-        background-color: #10b981; /* Fresh green color */
+        background-color: #10b981;
         color: white;
-        font-weight: 600;
+        font-weight: bold;
         cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
 
       button:hover,
       button:focus {
-        background-color: #059669; /* Darker shade on hover/focus */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        background-color: #059669;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
       }
 
       #messages li {
-        background-color: #e0f2fe; /* Light blue for messages */
-        border-left: 5px solid #60a5fa; /* Complementary border color */
+        background-color: #e0f2fe;
+        border-left: 5px solid #60a5fa;
         padding: 12px;
         margin-bottom: 10px;
         border-radius: 8px;
-        word-break: break-word; /* Ensure long words don't overflow */
+        word-break: break-word;
+      }
+      /* center title */
+      #messages li:first-child {
+        text-align: center;
+      }
+      /* reset mute  */
+      .mute label {
+        display: inline-block;
+      }
+      #mute {
+        display: inline-block;
+        width: 20px;
       }
 
-      /* align mute items to left */
-      .mute {
-        text-align: left;
-        padding: 0 20px;
-      }
-      .forms {
-        text-align: left;
-        padding: 0 20px;
-      }
-      .forms form {
-        display: flex;
-        justify-content: space-between;
-      }
-      .forms form input {
-        width: 80%;
-      }
-      .forms form button {
-        width: 15%;
-      }
-      .forms form input,
-      .forms form button {
-        margin: 0;
-      }
-      .buttons {
-        text-align: left;
-        padding: 0 20px;
-      }
-      #room-selection {
-        text-align: left;
-        padding: 0 20px;
-      }
-      li {
-        list-style: none;
-      }
       @media (max-width: 600px) {
+        /* fit all within main container */
         .main-container {
-          padding: 0 15px;
-        }
-        .forms form {
-          flex-direction: column;
-        }
-        .forms form input,
-        .forms form button {
-          width: 100%;
-        }
-        .forms form input {
-          margin-bottom: 10px;
-          width: auto;
-        }
-        .buttons {
+          width: 80%;
+          margin: auto;
           text-align: center;
         }
-        #room-selection {
-          text-align: center;
+        .main-container h1 {
+          font-size: 2rem;
+        }
+        .main-container input,
+        .main-container button {
+          padding: 10px 20px;
+        }
+        /* width 90% */
+        .main-container input {
+          width: 90%;
         }
       }
     </style>
@@ -131,8 +112,7 @@
         Enter Room Name:
         <input id="room-name" type="text" placeholder="Room name" />
         <div class="mute">
-          <input type="checkbox" id="mute" />
-          <label for="mute">Mute</label>
+          <label for="mute">Mute</label> <input type="checkbox" id="mute" />
         </div>
         <div class="buttons">
           <button id="join-room">Join Room</button>
