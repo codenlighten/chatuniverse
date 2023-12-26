@@ -75,6 +75,20 @@
         text-align: left;
         padding: 0 20px;
       }
+      .forms form {
+        display: flex;
+        justify-content: space-between;
+      }
+      .forms form input {
+        width: 80%;
+      }
+      .forms form button {
+        width: 15%;
+      }
+      .forms form input,
+      .forms form button {
+        margin: 0;
+      }
       .buttons {
         text-align: left;
         padding: 0 20px;
@@ -86,6 +100,23 @@
       @media (max-width: 600px) {
         .main-container {
           padding: 0 15px;
+        }
+        .forms form {
+          flex-direction: column;
+        }
+        .forms form input,
+        .forms form button {
+          width: 100%;
+        }
+        .forms form input {
+          margin-bottom: 10px;
+          width: auto;
+        }
+        .buttons {
+          text-align: center;
+        }
+        #room-selection {
+          text-align: center;
         }
       }
     </style>
