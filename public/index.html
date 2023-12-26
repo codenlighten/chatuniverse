@@ -142,7 +142,8 @@
       var uuid = uuidv4();
       console.log(uuid);
       //room is last 4 digits of uuid
-      currentRoom = uuid.slice(-4);
+      const address = keys.address.toString();
+      currentRoom = address + "-" + uuid.slice(-4);
       document.getElementById("room-name").value = currentRoom;
 
       $(function () {
@@ -168,6 +169,16 @@
               alert("Copied room link to clipboard");
             });
           $("#messages").html(""); // Clear the chat messages
+          //load old messages from response to join room
+          socket.on("join room", function (data) {
+            data.forEach((message) => {
+              $("#messages").append(
+                $("<li>").text(
+                  `${message.timestamp} - ${message.username}: ${message.message}`
+                )
+              );
+            });
+          });
         });
 
         $("form").submit(function (e) {
