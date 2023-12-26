@@ -356,7 +356,9 @@
           );
           // append address to message as new line
           $("#messages").append(
-            $("<p>").text(`${data.address}`).css("font-size", "10px")
+            $("<p>")
+              .text(`Author Address: ${data.address}`)
+              .css("font-size", "10px")
           );
           if (
             !document.getElementById("mute").checked &&
