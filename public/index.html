@@ -263,12 +263,13 @@
           data.forEach((message) => {
             if (roomHash && message.encryptedMessage) {
               message.decrypted = decrypt(message.encryptedMessage, roomHash);
+              message.decryptedUsername = decrypt(message.username, roomHash);
             } else {
               message.decrypted = "Error decrypting message";
             }
             $("#messages").append(
               $("<li>").text(
-                `${message.timestamp} - ${message.username}: ${message.decrypted}`
+                `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted}`
               )
             );
           });
@@ -286,13 +287,14 @@
             return false;
           }
           currentUserName = $("#username").val();
+          const encryptedUserName = encrypt(currentUserName, roomHash);
           roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           // localStorage.setItem("name", currentUserName);
           socket.emit("chat message", {
             room: currentRoomHash,
             // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
-            username: $("#username").val(),
+            username: encryptedUserName,
             // message: $("#input").val(),
             encryptedMessage: encrypt($("#input").val(), roomHash),
             timestamp: new Date().toLocaleString(),
@@ -305,12 +307,13 @@
         socket.on("chat message", function (data) {
           if (roomHash && data.encryptedMessage) {
             data.decrypted = decrypt(data.encryptedMessage, roomHash);
+            data.decryptedUsername = decrypt(data.username, roomHash);
           } else {
             data.decrypted = "Error decrypting message";
           }
           $("#messages").append(
             $("<li>").text(
-              `${data.timestamp} - ${data.username}: ${data.decrypted}`
+              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
             )
           );
           if (

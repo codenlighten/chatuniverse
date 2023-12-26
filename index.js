@@ -32,6 +32,7 @@ io.on("connection", (socket) => {
       messages.sort((a, b) => {
         return new Date(b.timestamp) - new Date(a.timestamp);
       });
+      console.log(messages);
       socket.emit("load old messages", messages);
     } catch (err) {
       console.error(err);
