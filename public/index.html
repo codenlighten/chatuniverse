@@ -71,7 +71,18 @@
         text-align: left;
         padding: 0 20px;
       }
-
+      .forms {
+        text-align: left;
+        padding: 0 20px;
+      }
+      .buttons {
+        text-align: left;
+        padding: 0 20px;
+      }
+      #room-selection {
+        text-align: left;
+        padding: 0 20px;
+      }
       @media (max-width: 600px) {
         .main-container {
           padding: 0 15px;
@@ -85,36 +96,37 @@
       <div id="room-selection">
         Enter Room Name:
         <input id="room-name" type="text" placeholder="Room name" />
-        <button id="join-room">Join Room</button>
-      </div>
-
-      <div class="myAddress">
-        <!-- current room -->
-        <p>Current Room: <span id="currentRoom"></span></p>
-        <button id="shareRoom">Share Room</button>
+        <div class="mute">
+          <input type="checkbox" id="mute" />
+          <label for="mute">Mute</label>
+        </div>
+        <div class="buttons">
+          <button id="join-room">Join Room</button>
+          <button id="shareRoom">Share Room</button>
+        </div>
         <p>My Address: <span id="myAddress"></span></p>
+        <p>Current Room: <span id="currentRoom"></span></p>
       </div>
       <!-- mute option -->
-      <div class="mute">
-        <input type="checkbox" id="mute" />
-        <label for="mute">Mute</label>
-      </div>
-      <ul id="messages"></ul>
 
-      <form id="form" action="">
-        <input
-          id="username"
-          type="text"
-          placeholder="Enter your name"
-          autocomplete="off"
-          required
-        />
-        <input
-          id="input"
-          placeholder="enter message"
-          autocomplete="off"
-        /><button id="send">Send</button>
-      </form>
+      <ul id="messages"></ul>
+      <div class="forms">
+        <form id="form" action="">
+          <input
+            id="username"
+            type="text"
+            placeholder="Enter your name"
+            autocomplete="off"
+            required
+          />
+          <input
+            id="input"
+            placeholder="enter message"
+            autocomplete="off"
+          /><button id="send">Send</button>
+        </form>
+      </div>
+
       <!-- previous rooms/conversations select option list -->
       <div id="previous-rooms">
         <select id="previous-rooms-list">
