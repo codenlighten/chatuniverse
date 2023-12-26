@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const http = require("http");
 const socketIo = require("socket.io");
 
@@ -48,7 +49,7 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 });
-
-server.listen(5000, () => {
-  console.log("listening on *:5000");
+const port = process.env.PORT || 5000;
+server.listen(port, () => {
+  console.log(`Listening on port ${port}`);
 });
