@@ -91,6 +91,7 @@
       <div class="myAddress">
         <!-- current room -->
         <p>Current Room: <span id="currentRoom"></span></p>
+        <button id="shareRoom">Share Room</button>
         <p>My Address: <span id="myAddress"></span></p>
       </div>
       <!-- mute option -->
@@ -314,6 +315,13 @@
         if (selectedRoom !== "0") {
           window.location.href = window.location.href + "?room=" + selectedRoom;
         }
+      });
+
+      // Share room button
+      $("#shareRoom").click(function () {
+        let urlWithRoom = window.location.href + "?room=" + currentRoom;
+        navigator.clipboard.writeText(urlWithRoom);
+        alert("Copied room link to clipboard");
       });
 
       const encrypt = (message, password) => {
