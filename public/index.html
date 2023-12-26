@@ -102,6 +102,12 @@
           autocomplete="off"
         /><button id="send">Send</button>
       </form>
+      <!-- previous rooms/conversations select option list -->
+      <div id="previous-rooms">
+        <select id="previous-rooms-list">
+          <option value="0">Previous Rooms</option>
+        </select>
+      </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -128,7 +134,15 @@
       document
         .getElementById("myAddress")
         .setAttribute("title", keys.address.toString());
-
+      if (!localStorage.getItem("previousRooms")) {
+        localStorage.setItem("previousRooms", JSON.stringify([]));
+      }
+      const previousRooms = JSON.parse(
+        localStorage.getItem("previousRooms")
+      ).reverse();
+      previousRooms.forEach((room) => {
+        $("#previous-rooms-list").append($("<option>").text(room).val(room));
+      });
       const uuidv4 = () => {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
           /[xy]/g,
@@ -142,7 +156,7 @@
       var uuid = uuidv4();
       console.log(uuid);
       const address = keys.address.toString();
-      var currentRoom = address + "-" + uuid.slice(-4); // Global current room variable
+      var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
       document.getElementById("room-name").value = currentRoom;
 
       $(function () {
@@ -154,13 +168,53 @@
         if (room) {
           currentRoom = room; // Update current room based on URL
           document.getElementById("room-name").value = room;
+          socket.emit("join room", room);
+          document.getElementById("currentRoom").innerHTML = room;
+          document.getElementById("currentRoom").setAttribute("title", room);
+          // Add room to previous rooms list
+          if (!previousRooms.includes(room)) {
+            previousRooms.push(room);
+            localStorage.setItem(
+              "previousRooms",
+              JSON.stringify(previousRooms)
+            );
+            $("#previous-rooms-list").append(
+              $("<option>").text(room).val(room)
+            );
+          }
+          // Clear chat messages
+          $("#messages").html(""); // Clear chat messages
         }
 
         $("#join-room").click(function () {
           currentRoom = $("#room-name").val();
+          //if current room is empty then generate new room with address and uuid
+          if (currentRoom === "") {
+            currentRoom = address + "-" + uuidv4().slice(-4);
+            document.getElementById("room-name").value = currentRoom;
+          }
+          //if not contain "-" then add "-" and uuid
+          if (!currentRoom.includes("-")) {
+            currentRoom = currentRoom + "-" + uuidv4().slice(-4);
+            document.getElementById("room-name").value = currentRoom;
+          }
           socket.emit("join room", currentRoom);
           document.getElementById("currentRoom").innerHTML = currentRoom;
-
+          document
+            .getElementById("currentRoom")
+            .setAttribute("title", currentRoom);
+          // Add room to previous rooms list
+          if (!previousRooms.includes(currentRoom)) {
+            previousRooms.push(currentRoom);
+            localStorage.setItem(
+              "previousRooms",
+              JSON.stringify(previousRooms)
+            );
+            $("#previous-rooms-list").append(
+              $("<option>").text(currentRoom).val(currentRoom)
+            );
+          }
+          // Clear chat messages
           $("#messages").html(""); // Clear chat messages
         });
 
@@ -213,6 +267,14 @@
             )
           );
         });
+      });
+
+      // Previous rooms select option list
+      $("#previous-rooms-list").change(function () {
+        var selectedRoom = $(this).children("option:selected").val();
+        if (selectedRoom !== "0") {
+          window.location.href = window.location.href + "?room=" + selectedRoom;
+        }
       });
     </script>
   </body>
