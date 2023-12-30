@@ -142,7 +142,11 @@
       #logo {
         display: block;
         margin: 0 auto;
-        width: 300px;
+        width: 200px;
+        border-radius: 20%;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        background-color: white;
       }
 
       @media (max-width: 600px) {
@@ -170,8 +174,9 @@
           width: 90%;
         }
         #logo {
-          width: 200px;
-          height: 200px;
+          width: 150px;
+          height: 150px;
+          margin: 12px auto;
         }
       }
     </style>
@@ -525,7 +530,13 @@
             document.documentElement.getAttribute("data-theme");
           const newTheme = currentTheme === "dark" ? "" : "dark";
           document.documentElement.setAttribute("data-theme", newTheme);
-
+          // if dark, add background color to logo
+          if (newTheme === "dark") {
+            document.getElementById("logo").style.backgroundColor = "#bb86fc";
+            // border radius
+          } else {
+            document.getElementById("logo").style.backgroundColor = "white";
+          }
           // Update button text or appearance if needed
           this.textContent =
             newTheme === "dark"
