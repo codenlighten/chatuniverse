@@ -216,7 +216,7 @@
       </div>
       <div class="theme-switcher">
         <button id="theme-toggle">Toggle Theme</button>
-        <!-- <button id="enableNotifications">Enable Notifications</button> -->
+        <button id="enableNotifications">Enable Notifications</button>
       </div>
     </div>
 
@@ -416,7 +416,13 @@
           } else {
             data.decrypted = "Error decrypting message";
           }
-
+          if (document.visibilityState === "hidden") {
+            if (Notification.permission === "granted") {
+              new Notification("New Message", {
+                body: data.decrypted || "You have a new message!",
+              });
+            }
+          }
           // append address to message as new line
           $("#messages").prepend(
             $("<p>")
@@ -503,7 +509,20 @@
               ? "Switch to Light Mode"
               : "Switch to Dark Mode";
         });
+
+      document
+        .getElementById("enableNotifications")
+        .addEventListener("click", function () {
+          if (
+            Notification.permission !== "denied" ||
+            Notification.permission === "default"
+          ) {
+            Notification.requestPermission();
+          }
+        });
+
       // Check if service workers are supported
+
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker
           .register("/service-worker.js")
