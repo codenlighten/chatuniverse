@@ -194,7 +194,7 @@
       </div>
       <div class="theme-switcher">
         <button id="theme-toggle">Toggle Theme</button>
-        <button id="enableNotifications">Enable Notifications</button>
+        <!-- <button id="enableNotifications">Enable Notifications</button> -->
       </div>
     </div>
 
@@ -256,16 +256,16 @@
       roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
       document.getElementById("room-name").value = currentRoom;
       // Request Notification Permission
-      document
-        .getElementById("enableNotifications")
-        .addEventListener("click", function () {
-          if (
-            Notification.permission !== "denied" ||
-            Notification.permission === "default"
-          ) {
-            Notification.requestPermission();
-          }
-        });
+      // document
+      //   .getElementById("enableNotifications")
+      //   .addEventListener("click", function () {
+      //     if (
+      //       Notification.permission !== "denied" ||
+      //       Notification.permission === "default"
+      //     ) {
+      //       Notification.requestPermission();
+      //     }
+      //   });
 
       // Rest of the Socket.IO and Notification code...
 
