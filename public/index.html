@@ -129,10 +129,12 @@
       }
 
       /* mute */
-      .mute label {
+      .mute label,
+      .keep-history label {
         font-size: 1.2rem;
       }
-      .mute input[type="checkbox"] {
+      .mute input[type="checkbox"],
+      .keep-history input[type="checkbox"] {
         width: 20px;
         margin-left: 10px;
       }
@@ -190,6 +192,11 @@
         </div>
         <p>My Address: <span id="myAddress"></span></p>
         <p>Current Room: <span id="currentRoom"></span></p>
+        <!-- checkbox for keep chat history -->
+        <!-- <div class="keep-history">
+          <label for="keep-history">Enable Chat History</label>
+          <input type="checkbox" id="keep-history" />
+        </div> -->
       </div>
 
       <ul id="messages"></ul>
@@ -291,6 +298,17 @@
 
       // Rest of the Socket.IO and Notification code...
 
+      // keep history checkbox
+      let keepHistory = true;
+      // document
+      //   .getElementById("keep-history")
+      //   .addEventListener("change", (e) => {
+      //     if (e.target.checked) {
+      //       keepHistory = true;
+      //     } else {
+      //       keepHistory = false;
+      //     }
+      //   });
       $(function () {
         var socket = io();
 
@@ -400,6 +418,7 @@
             // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
             username: encryptedUserName,
             // message: $("#input").val(),
+            history: keepHistory,
             address: keys.address.toString(),
             encryptedMessage: encrypt($("#input").val(), roomHash),
             timestamp: new Date().toLocaleString(),
@@ -521,6 +540,7 @@
             Notification.permission === "default"
           ) {
             Notification.requestPermission();
+            alert("Notifications enabled");
           }
         });
 

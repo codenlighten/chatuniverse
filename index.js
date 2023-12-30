@@ -22,6 +22,9 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   socket.on("join room", async (room) => {
     socket.join(room);
+    console.log(`User joined room ${room}`);
+    if (!room) return;
+    // check for history
 
     // Retrieve messages from AceBase
     try {
@@ -43,10 +46,15 @@ io.on("connection", (socket) => {
 
   socket.on("chat message", (data) => {
     // Save new message to AceBase
-    const messagesRef = db.ref(`rooms/${data.room}/messages`);
-    messagesRef.push(data).then(() => {
+    console.log(data.history);
+    if (data.history) {
+      const messagesRef = db.ref(`rooms/${data.room}/messages`);
+      messagesRef.push(data).then(() => {
+        io.to(data.room).emit("chat message", data);
+      });
+    } else {
       io.to(data.room).emit("chat message", data);
-    });
+    }
   });
 
   console.log("a user connected");
