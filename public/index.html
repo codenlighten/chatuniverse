@@ -399,9 +399,7 @@
           } else {
             data.decrypted = "Error decrypting message";
           }
-          if (Notification.permission === "granted") {
-            new Notification("New Message", { body: data.decrypted });
-          }
+
           // append address to message as new line
           $("#messages").prepend(
             $("<p>")
@@ -488,6 +486,17 @@
               ? "Switch to Light Mode"
               : "Switch to Dark Mode";
         });
+      // Check if service workers are supported
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then(function (registration) {
+            console.log("Service Worker Registered", registration);
+          })
+          .catch(function (error) {
+            console.log("Service Worker Registration Failed", error);
+          });
+      }
     </script>
   </body>
 </html>
