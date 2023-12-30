@@ -416,12 +416,15 @@
           } else {
             data.decrypted = "Error decrypting message";
           }
-          if (document.visibilityState === "hidden") {
-            if (Notification.permission === "granted") {
-              new Notification("New Message", {
-                body: data.decrypted || "You have a new message!",
-              });
-            }
+          if (
+            "serviceWorker" in navigator &&
+            navigator.serviceWorker.controller
+          ) {
+            // Send a message to the service worker
+            navigator.serviceWorker.controller.postMessage({
+              type: "newMessage",
+              data: data,
+            });
           }
           // append address to message as new line
           $("#messages").prepend(
