@@ -9,7 +9,13 @@
     <meta name="keywords" content="SatoChat" />
     <meta name="author" content="SatoChat" />
     <!-- favicon -->
-    <!-- <link rel="icon" href="favicon.ico" /> -->
+    <link rel="icon" href="satochat.png" />
+    <!-- meta description -->
+    <meta
+      name="description"
+      content="SatoChat is a decentralized chat application built on Bitcoin SV"
+    />
+
     <!-- crypto js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://unpkg.com/bsv@1.5"></script>
@@ -131,6 +137,11 @@
         margin-left: 10px;
       }
 
+      #logo {
+        display: block;
+        margin: 0 auto;
+      }
+
       @media (max-width: 600px) {
         /* Responsive adjustments */
         .main-container {
@@ -155,11 +166,17 @@
         .main-container select {
           width: 90%;
         }
+        #logo {
+          width: 50px;
+          height: 50px;
+        }
       }
     </style>
   </head>
   <body>
     <div class="main-container">
+      <!-- logo -->
+      <img id="logo" src="/satochat.png" alt="logo" width="100" height="100" />
       <h1>SatoChat</h1>
       <div id="room-selection">
         Enter Room Name:
