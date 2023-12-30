@@ -2,7 +2,7 @@
 self.addEventListener("message", function (event) {
   if (event.data && event.data.type === "newMessage") {
     const messageData = event.data.data;
-    const title = "New Chat Message";
+    const title = "New Chat Message"; // Use this title for the notification
     const options = {
       body: messageData.decrypted,
       icon: "satochat.png",
@@ -22,6 +22,6 @@ self.addEventListener("message", function (event) {
         { action: "close", title: "Close", icon: "satochat.png" },
       ],
     };
-    event.waitUntil(self.registration.showNotification(data.title, options));
+    event.waitUntil(self.registration.showNotification(title, options));
   }
 });
