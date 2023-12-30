@@ -254,7 +254,10 @@
       var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
       roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
       document.getElementById("room-name").value = currentRoom;
-
+      // Request Notification Permission
+      if (Notification.permission === "default") {
+        Notification.requestPermission();
+      }
       $(function () {
         var socket = io();
 
@@ -379,6 +382,9 @@
             data.decryptedUsername = decrypt(data.username, roomHash);
           } else {
             data.decrypted = "Error decrypting message";
+          }
+          if (Notification.permission === "granted") {
+            new Notification("New Message", { body: data.decrypted });
           }
           // append address to message as new line
           $("#messages").prepend(
