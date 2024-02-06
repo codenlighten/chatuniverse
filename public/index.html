@@ -110,6 +110,41 @@
       footer span {
         font-weight: bold;
       }
+      button,
+      input[type="text"] {
+        margin: 5px;
+      }
+      input[type="text"] {
+        padding: 5px;
+      }
+      input[type="checkbox"] {
+        margin: 5px;
+      }
+      input[type="checkbox"] {
+        padding: 5px;
+      }
+
+      option {
+        padding: 5px;
+      }
+
+      select {
+        padding: 5px;
+      }
+
+      @media (max-width: 768px) {
+        main {
+          flex-direction: column;
+        }
+
+        aside,
+        section {
+          width: 100%;
+        }
+        aside {
+          margin-bottom: 20px;
+        }
+      }
     </style>
   </head>
   <body>
