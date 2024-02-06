@@ -1,236 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <!-- viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- meta -->
-    <meta charset="utf-8" />
-    <meta name="description" content="SatoChat" />
-    <meta name="keywords" content="SatoChat" />
-    <meta name="author" content="SatoChat" />
-    <!-- favicon -->
-    <link rel="icon" href="satochat.png" />
-    <!-- meta description -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
       content="SatoChat is a decentralized chat application built on Bitcoin SV"
     />
-
-    <!-- crypto js -->
+    <title>SatoChat</title>
+    <link rel="icon" href="satochat.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://unpkg.com/bsv@1.5"></script>
-    <!-- <script src="//cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-      eruda.init();
-    </script> -->
-    <title>SatoChat</title>
     <style>
       :root {
-        --background-color: #f3f4f6;
-        --text-color: #334155;
-        --element-bg: #ffffff;
-        --button-bg: #10b981;
-        --button-text: white;
-        --message-bg: #e0f2fe;
-        --message-border: #60a5fa;
+        /* Light theme colors */
+        --background-color: #f5f5f5;
+        --text-color: #000;
+        --header-footer-bg-color: #6200ee;
+        --button-bg-color: #6200ee;
+        --button-text-color: white;
+        --button-hover-bg-color: #3700b3;
       }
 
-      [data-theme="dark"] {
+      .dark-mode {
+        /* Dark theme colors */
         --background-color: #121212;
-        --text-color: #ffffff;
-        --element-bg: #333333;
-        --button-bg: #bb86fc;
-        --button-text: white;
-        --message-bg: #1a1a1a;
-        --message-border: #bb86fc;
+        --text-color: #fff;
+        --header-footer-bg-color: #333;
+        --button-bg-color: #bb86fc;
+        --button-text-color: #000;
+        --button-hover-bg-color: #3700b3;
       }
 
       body {
-        font-family: "Poppins", sans-serif;
         background-color: var(--background-color);
         color: var(--text-color);
-        line-height: 1.6;
       }
 
-      .main-container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        text-align: left;
-        /* border: 1px solid #e0e0e0; */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        word-break: break-word;
+      header,
+      footer {
+        background-color: var(--header-footer-bg-color);
+      }
+      header {
+        padding: 10px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
-      h1 {
-        /* turquoise color */
-        color: #10b981;
-        font-size: 2.5rem;
-        margin-bottom: 0.8em;
-      }
-
-      input,
-      button {
-        padding: 15px 25px;
-        margin: 10px 0;
-        border: none;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        background-color: #333333; /* Darker elements */
-        color: #ffffff; /* Light text */
-      }
-
-      input {
-        width: 70%;
-        box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1); /* Lighter shadow */
+      nav h1 {
+        margin: 0;
       }
 
       button {
-        background-color: #333; /* Purple button color */
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Lighter shadow */
-        border: 1px solid #333;
-        margin: 10px;
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
       }
 
       button:hover {
-        background-color: #10b981; /* Purple button color */
-        box-shadow: 0 6px 15px rgba(255, 255, 255, 0.3);
-      }
-
-      #messages {
-        margin: 20px 0;
-        padding: 0;
-        list-style: none;
-        text-align: left;
-      }
-
-      #messages li {
-        background-color: #1a1a1a; /* Darker list items */
-        border-left: 5px solid #bb86fc; /* Purple border */
-        padding: 12px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        word-break: break-word;
-        color: #ffffff; /* Light text */
-      }
-
-      /* select */
-      #previous-rooms-list {
-        padding: 10px 20px;
-        margin: 10px 0;
-        border: none;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        background-color: #333333; /* Darker elements */
-        color: #ffffff; /* Light text */
-      }
-
-      /* mute */
-      .mute label,
-      .keep-history label {
-        font-size: 1.2rem;
-      }
-      .mute input[type="checkbox"],
-      .keep-history input[type="checkbox"] {
-        width: 20px;
-        margin-left: 10px;
+        background-color: var(--button-hover-bg-color);
       }
 
       #logo {
-        display: block;
-        margin: 0 auto;
-        width: 200px;
-        border-radius: 20%;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
         background-color: white;
       }
 
-      @media (max-width: 600px) {
-        /* Responsive adjustments */
-        .main-container {
-          width: 80%;
-          margin: auto;
-          text-align: center;
-        }
-        .main-container h1 {
-          font-size: 2rem;
-        }
-        .main-container input,
-        .main-container button {
-          padding: 10px 20px;
-        }
-        .main-container input {
-          width: 90%;
-        }
-        .main-container button {
-          margin: 0 5px;
-        }
-        /* option */
-        .main-container select {
-          width: 90%;
-        }
-        #logo {
-          width: 150px;
-          height: 150px;
-          margin: 12px auto;
-        }
+      main {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+      }
+
+      aside {
+        width: 20%;
+      }
+
+      section {
+        width: 75%;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 10px;
+      }
+
+      footer p {
+        margin: 0;
+      }
+
+      footer span {
+        font-weight: bold;
       }
     </style>
   </head>
   <body>
-    <div class="main-container">
-      <!-- logo -->
-      <img id="logo" src="/satochat.png" alt="logo" />
-      <!-- <h1>SatoChat</h1> -->
-      <div id="room-selection">
-        Enter Room Name:
-        <input id="room-name" type="text" placeholder="Room name" />
-        <div class="mute">
-          <label for="mute">Mute</label> <input type="checkbox" id="mute" />
-        </div>
-        <div class="buttons">
-          <button id="join-room">Join Room</button>
-          <button id="shareRoom">Share Room</button>
-        </div>
-        <p>My Address: <span id="myAddress"></span></p>
-        <p>Current Room: <span id="currentRoom"></span></p>
-        <!-- checkbox for keep chat history -->
-        <!-- <div class="keep-history">
-          <label for="keep-history">Enable Chat History</label>
-          <input type="checkbox" id="keep-history" />
-        </div> -->
-      </div>
+    <header>
+      <nav>
+        <h1>SatoChat</h1>
+        <img src="satochat.png" alt="SatoChat Logo" id="logo" />
+        <button id="theme-toggle">Switch to Dark Mode</button>
+      </nav>
+    </header>
 
-      <ul id="messages"></ul>
-      <div class="forms">
-        <form id="form" action="">
-          <input
-            id="username"
-            type="text"
-            placeholder="Enter your name"
-            autocomplete="off"
-            required
-          />
-          <input
-            id="input"
-            placeholder="enter message"
-            autocomplete="off"
-          /><button id="send">Send</button>
-        </form>
-      </div>
-      <div id="previous-rooms">
+    <main>
+      <aside>
+        <h2>Rooms</h2>
         <select id="previous-rooms-list">
-          <option value="0">Previous Rooms</option>
+          <option value="0">Select a room...</option>
+          <!-- Options will be added dynamically -->
         </select>
-      </div>
-      <div class="theme-switcher">
-        <button id="theme-toggle">Toggle Theme</button>
+        <button id="join-room">Join Room</button>
+        <button id="shareRoom">Share Room</button>
         <button id="enableNotifications">Enable Notifications</button>
-      </div>
-    </div>
+        <label for="mute">Mute Notifications</label>
+        <input type="checkbox" id="mute" />
+      </aside>
+
+      <section>
+        <h1 id="currentRoom">Current Room</h1>
+        <ul id="messages">
+          <!-- Chat messages will be added here dynamically -->
+        </ul>
+        <form id="message-form">
+          <input id="username" type="text" placeholder="Username" />
+          <input id="room-name" type="text" placeholder="Room Name" />
+          <input id="input" type="text" placeholder="Type a message..." />
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Your Address: <span id="myAddress">Address will be displayed here</span>
+      </p>
+    </footer>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -289,35 +211,11 @@
       var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
       roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
       document.getElementById("room-name").value = currentRoom;
-      // Request Notification Permission
-      // document
-      //   .getElementById("enableNotifications")
-      //   .addEventListener("click", function () {
-      //     if (
-      //       Notification.permission !== "denied" ||
-      //       Notification.permission === "default"
-      //     ) {
-      //       Notification.requestPermission();
-      //     }
-      //   });
 
-      // Rest of the Socket.IO and Notification code...
-
-      // keep history checkbox
       let keepHistory = true;
-      // document
-      //   .getElementById("keep-history")
-      //   .addEventListener("change", (e) => {
-      //     if (e.target.checked) {
-      //       keepHistory = true;
-      //     } else {
-      //       keepHistory = false;
-      //     }
-      //   });
+
       $(function () {
         var socket = io();
-
-        // Check query string for room
         const urlParams = new URLSearchParams(window.location.search);
         const room = urlParams.get("room");
         if (room) {
@@ -525,23 +423,22 @@
       document
         .getElementById("theme-toggle")
         .addEventListener("click", function () {
-          const currentTheme =
-            document.documentElement.getAttribute("data-theme");
-          const newTheme = currentTheme === "dark" ? "" : "dark";
-          document.documentElement.setAttribute("data-theme", newTheme);
-          // if dark, add background color to logo
-          if (newTheme === "dark") {
-            document.getElementById("logo").style.backgroundColor = "#bb86fc";
-            // border radius
-          } else {
-            document.getElementById("logo").style.backgroundColor = "white";
-          }
-          // Update button text or appearance if needed
-          this.textContent =
-            newTheme === "dark"
-              ? "Switch to Light Mode"
-              : "Switch to Dark Mode";
+          document.body.classList.toggle("dark-mode");
+          const isDarkMode = document.body.classList.contains("dark-mode");
+          this.textContent = isDarkMode
+            ? "Switch to Light Mode"
+            : "Switch to Dark Mode";
+          // Optionally save the theme preference to localStorage
+          localStorage.setItem("theme", isDarkMode ? "dark" : "light");
         });
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentTheme = localStorage.getItem("theme") || "light";
+        if (currentTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          document.getElementById("theme-toggle").textContent =
+            "Switch to Light Mode";
+        }
+      });
 
       document
         .getElementById("enableNotifications")
