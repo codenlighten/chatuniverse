@@ -289,9 +289,12 @@
           }
           //if not contain "-" then add "-" and uuid
           if (!currentRoom.includes("-")) {
+            // remove spaces
+            currentRoom = currentRoom.replace(/\s/g, "");
             currentRoom = currentRoom + "-" + uuidv4().slice(-4);
             document.getElementById("room-name").value = currentRoom;
           }
+          currentRoom = currentRoom.replace(/\s/g, "");
           roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           socket.emit("join room", currentRoomHash);
