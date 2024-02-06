@@ -257,6 +257,7 @@
         const room = urlParams.get("room");
         if (room) {
           currentRoom = room; // Update current room based on URL
+          currentRoom = currentRoom.replace(/\s/g, "");
           document.getElementById("room-name").value = room;
           roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
@@ -422,6 +423,7 @@
           alert("Please enter a room name");
           return false;
         }
+        currentRoom = currentRoom.replace(/\s/g, "");
         let urlWithRoom = window.location.href + "?room=" + currentRoom;
         // navigator.clipboard.writeText(urlWithRoom);
         //copy for mobile devices
