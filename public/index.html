@@ -236,6 +236,8 @@
             <option value="0">Select a room...</option>
             <!-- Options will be added dynamically -->
           </select>
+          <!-- room-name -->
+          <input id="room-name" type="text" placeholder="Room Name" />
           <button id="join-room">Join Room</button>
           <!-- new room -->
           <button id="new-room">New Room</button>
@@ -253,7 +255,6 @@
           <!-- Chat messages will be added here dynamically -->
         </ul>
         <form id="message-form">
-          <input id="room-name" type="text" placeholder="Room Name" />
           <input id="username" type="text" placeholder="Username" required />
           <input
             id="input-message"
@@ -379,6 +380,8 @@
             }
             // Clear chat messages
             $("#chat-messages").html(""); // Clear chat messages
+            document.getElementById("roomSelect").style.display = "none";
+            document.getElementById("joined").style.display = "block";
           }
 
           $("#join-room").click(function () {
@@ -413,6 +416,8 @@
               document.getElementById(
                 "room-list"
               ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
+              document.getElementById("roomSelect").style.display = "none";
+              document.getElementById("joined").style.display = "block";
             }
             // Clear chat messages
             $("#chat-messages").html(""); // Clear chat messages
@@ -458,6 +463,8 @@
               document.getElementById(
                 "room-list"
               ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
+              document.getElementById("roomSelect").style.display = "none";
+              document.getElementById("joined").style.display = "block";
             }
             // Clear chat messages
             $("#chat-messages").html(""); // Clear chat messages
