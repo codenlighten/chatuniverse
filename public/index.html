@@ -230,12 +230,13 @@
             <!-- Options will be added dynamically -->
           </select>
           <button id="join-room">Join Room</button>
-          <!-- clear room history -->
+          <!-- new room -->
+          <button id="new-room">New Room</button>
           <button id="clear-room-history">Clear Room History</button>
         </div>
       </aside>
 
-      <section>
+      <section id="current">
         <h1 id="current-room">Current Room</h1>
         <ul id="chat-messages">
           <!-- Chat messages will be added here dynamically -->
@@ -350,7 +351,9 @@
             roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
             currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
             socket.emit("join room", currentRoomHash);
-            document.getElementById("current-room").innerHTML = room;
+            document.getElementById(
+              "current-room"
+            ).innerHTML = `Current Room: ${currentRoom}`;
             document.getElementById("current-room").setAttribute("title", room);
             // Add room to previous rooms list
             //remove from url
@@ -388,6 +391,51 @@
             currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
             socket.emit("join room", currentRoomHash);
             document.getElementById("current-room").innerHTML = currentRoom;
+            document
+              .getElementById("current-room")
+              .setAttribute("title", currentRoom);
+            // Add room to previous rooms list
+            if (!previousRooms.includes(currentRoom)) {
+              previousRooms.push(currentRoom);
+              localStorage.setItem(
+                "previousRooms",
+                JSON.stringify(previousRooms)
+              );
+              document.getElementById(
+                "room-list"
+              ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
+            }
+            // Clear chat messages
+            $("#chat-messages").html(""); // Clear chat messages
+            //hide room select
+            document.getElementById("roomSelect").style.display = "none";
+            document.getElementById("joined").style.display = "block";
+          });
+          $("#new-room").click(function () {
+            currentRoom = $("#room-name").val();
+            //if current room is empty then generate new room with address and uuid
+            if (currentRoom === "") {
+              currentRoom = address + "-" + uuidv4().slice(-4);
+              document.getElementById(
+                "room-name"
+              ).value = `Current Room: ${currentRoom}`;
+            }
+            //if not contain "-" then add "-" and uuid
+            if (!currentRoom.includes("-")) {
+              // remove spaces
+              currentRoom = currentRoom.replace(/\s/g, "");
+              currentRoom = currentRoom + "-" + uuidv4().slice(-4);
+              document.getElementById(
+                "room-name"
+              ).value = `Current Room: ${currentRoom}`;
+            }
+            currentRoom = currentRoom.replace(/\s/g, "");
+            roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            socket.emit("join room", currentRoomHash);
+            document.getElementById(
+              "current-room"
+            ).innerHTML = `Current Room: ${currentRoom}`;
             document
               .getElementById("current-room")
               .setAttribute("title", currentRoom);
