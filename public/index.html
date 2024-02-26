@@ -245,7 +245,7 @@
         </div>
       </aside>
 
-      <section id="current">
+      <section class="hidden" id="current">
         <h1 id="current-room">Current Room</h1>
         <p>
           Your Address:
@@ -385,7 +385,8 @@
             document.getElementById(
               "chat-messages"
             ).innerHTML = `<li>Joined room: ${room}</li>`;
-            //remove hidden class
+            //remove hidden class on current room and chat messages
+            document.getElementById("current").classList.remove("hidden");
             document.getElementById("chat-messages").classList.remove("hidden");
           } else {
             //clear input
@@ -430,6 +431,8 @@
                 "chat-messages"
               ).innerHTML = `<li>Joined room: ${currentRoom}</li>`;
               //remove hidden class
+              document.getElementById("current").classList.remove("hidden");
+
               document
                 .getElementById("chat-messages")
                 .classList.remove("hidden");
@@ -484,6 +487,7 @@
                 "chat-messages"
               ).innerHTML = `<li>Joined room: ${currentRoom}</li>`;
               //remove hidden class
+              document.getElementById("current").classList.remove("hidden");
               document
                 .getElementById("chat-messages")
                 .classList.remove("hidden");
