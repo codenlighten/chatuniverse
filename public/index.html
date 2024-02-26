@@ -125,6 +125,25 @@
       button:hover {
         opacity: 0.8;
       }
+      #joined {
+        display: none;
+        width: 100%;
+      }
+      #joined button {
+        width: 100%;
+        padding: 12px 20px;
+        margin-bottom: 10px;
+      }
+      #joined label {
+        margin-bottom: 10px;
+      }
+      #joined input {
+        margin-bottom: 10px;
+      }
+
+      .hidden {
+        display: none;
+      }
 
       /* Media queries */
 
@@ -232,6 +251,11 @@
           />
           <button type="submit">Send</button>
         </form>
+        <div class="hidden" id="joined">
+          <button id="share-room">Share Room</button>
+          <label for="mute-notifications">Mute Notifications</label>
+          <input type="checkbox" id="mute-notifications" />
+        </div>
       </section>
     </main>
 
@@ -240,9 +264,6 @@
         Your Address:
         <span id="user-address">Address will be displayed here</span>
       </p>
-      <button id="share-room">Share Room</button>
-      <label for="mute-notifications">Mute Notifications</label>
-      <input type="checkbox" id="mute-notifications" />
     </footer>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -385,6 +406,7 @@
             $("#chat-messages").html(""); // Clear chat messages
             //hide room select
             document.getElementById("roomSelect").style.display = "none";
+            document.getElementById("joined").style.display = "block";
           });
 
           // Load old messages
@@ -476,6 +498,8 @@
             )
               waterSound.play();
           });
+          //click join room
+          // document.getElementById("join-room").click();
         });
 
         // Previous rooms select option list
