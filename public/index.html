@@ -46,41 +46,42 @@
       header {
         background-color: #0f0f0f;
         color: #f0f0f0;
-        padding: 10px;
+        padding: 20px;
         text-align: center;
+        word-wrap: break-word;
       }
 
-      nav {
-        display: flex;
-        justify-content: center; /* Center navigation items */
-        align-items: center;
-        margin-bottom: 10px; /* Add margin for spacing */
+      header h1 {
+        margin: 0;
       }
 
-      #logo {
+      header img {
         width: 50px;
         height: 50px;
+        margin-top: 10px;
       }
 
       /* Main styles */
 
       main {
         display: flex;
-        flex-direction: column; /* Stack main content vertically */
-        padding: 10px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 6px 20px;
         word-wrap: break-word;
       }
 
-      /* Section and aside styles */
-
-      aside,
-      section {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-        padding: 10px;
-        width: 100%; /* Full width on mobile */
-        margin-bottom: 20px; /* Add margin for spacing */
+      aside {
+        width: 100%;
+        margin-bottom: 20px;
         word-wrap: break-word;
+      }
+
+      section {
+        width: 100%;
+        word-wrap: break-word;
+        margin: 0;
       }
 
       /* Footer styles */
@@ -88,57 +89,8 @@
       footer {
         background-color: #0f0f0f;
         color: #f0f0f0;
-        padding: 10px;
+        padding: 20px;
         text-align: center;
-      }
-
-      footer p {
-        margin: 0;
-      }
-
-      footer span {
-        font-weight: bold;
-      }
-
-      /* Form styles */
-
-      form {
-        display: flex;
-        flex-direction: column;
-      }
-
-      input[type="text"],
-      select,
-      button {
-        width: 100%; /* Full width on mobile */
-        padding: 12px 20px;
-        margin-bottom: 10px; /* Add margin for spacing */
-      }
-
-      button {
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }
-
-      button:hover {
-        opacity: 0.8;
-      }
-      #joined {
-        display: none;
-        width: 100%;
-      }
-      #joined button {
-        width: 100%;
-        padding: 12px 20px;
-        margin-bottom: 10px;
-      }
-      #joined label {
-        margin-bottom: 10px;
-      }
-      #joined input {
-        margin-bottom: 10px;
       }
 
       #chat-messages {
@@ -154,20 +106,43 @@
 
       /* Media queries */
 
-      @media (min-width: 769px) {
-        /* For screens larger than 768px (tablets and desktops) */
+      /* Media query for mobile devices */
+      @media (max-width: 768px) {
         main {
-          flex-direction: row; /* Align main content side by side */
-          width: 100%; /* Full width */
+          flex-direction: column-reverse; /* Reverse the main flex direction to stack chat messages on top */
+          height: 100vh; /* Ensure the main takes the full height of the viewport */
         }
 
-        aside {
-          width: 20%; /* Sidebar width */
-          margin-right: 20px; /* Add margin for spacing */
+        #current {
+          flex-grow: 1; /* Allow the chat messages section to expand and fill remaining space */
+          overflow-y: auto; /* Enable vertical scrolling for chat messages */
         }
 
-        section {
-          width: 75%; /* Main content width */
+        #message-form {
+          position: fixed; /* Position the message input form fixed at the bottom */
+          bottom: 0;
+          width: 100%;
+          background-color: #1a1a1a;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        #message-form input[type="text"],
+        #message-form button {
+          flex: 1; /* Make input fields and button occupy remaining space */
+          margin: 5px;
+          padding: 8px;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+
+        #message-form button {
+          background-color: #4caf50;
+          color: white;
+          cursor: pointer;
         }
       }
 
@@ -190,6 +165,10 @@
           color: #f0f0f0;
         }
         footer {
+          background-color: #0f0f0f;
+          color: #f0f0f0;
+        }
+        #message-list {
           background-color: #0f0f0f;
           color: #f0f0f0;
         }
@@ -382,9 +361,7 @@
             $("#chat-messages").html(""); // Clear chat messages
             document.getElementById("roomSelect").style.display = "none";
             document.getElementById("joined").style.display = "block";
-            document.getElementById(
-              "chat-messages"
-            ).innerHTML = `<li>Joined room: ${room}</li>`;
+
             //remove hidden class on current room and chat messages
             document.getElementById("current").classList.remove("hidden");
             document.getElementById("chat-messages").classList.remove("hidden");
@@ -427,9 +404,7 @@
               ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
               document.getElementById("roomSelect").style.display = "none";
               document.getElementById("joined").style.display = "block";
-              document.getElementById(
-                "chat-messages"
-              ).innerHTML = `<li>Joined room: ${currentRoom}</li>`;
+
               //remove hidden class
               document.getElementById("current").classList.remove("hidden");
 
@@ -483,9 +458,7 @@
               ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
               document.getElementById("roomSelect").style.display = "none";
               document.getElementById("joined").style.display = "block";
-              document.getElementById(
-                "chat-messages"
-              ).innerHTML = `<li>Joined room: ${currentRoom}</li>`;
+
               //remove hidden class
               document.getElementById("current").classList.remove("hidden");
               document
