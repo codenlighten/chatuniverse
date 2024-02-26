@@ -642,6 +642,9 @@
             $("#chat-messages").html(""); // Clear chat messages
             //clear local storage
             localStorage.removeItem("previousRooms");
+            document.getElementById(
+              "room-list"
+            ).innerHTML = `<option value="0">Select a room...</option>`;
           }
         });
     </script>
