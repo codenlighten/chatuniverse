@@ -387,6 +387,9 @@
             ).innerHTML = `<li>Joined room: ${room}</li>`;
             //remove hidden class
             document.getElementById("chat-messages").classList.remove("hidden");
+          } else {
+            //clear input
+            document.getElementById("room-name").value = "";
           }
 
           $("#join-room").click(function () {
