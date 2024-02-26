@@ -215,7 +215,6 @@
           <!-- clear room history -->
           <button id="clear-room-history">Clear Room History</button>
         </div>
-        <button id="enable-notifications">Enable Notifications</button>
         <label for="mute-notifications">Mute Notifications</label>
         <input type="checkbox" id="mute-notifications" />
       </aside>
@@ -538,17 +537,17 @@
             }
           });
 
-        document
-          .getElementById("enable-notifications")
-          .addEventListener("click", function () {
-            if (
-              Notification.permission !== "denied" ||
-              Notification.permission === "default"
-            ) {
-              Notification.requestPermission();
-              alert("Notifications enabled");
-            }
-          });
+        // document
+        //   .getElementById("enable-notifications")
+        //   .addEventListener("click", function () {
+        //     if (
+        //       Notification.permission !== "denied" ||
+        //       Notification.permission === "default"
+        //     ) {
+        //       Notification.requestPermission();
+        //       alert("Notifications enabled");
+        //     }
+        //   });
 
         // Check if service workers are supported
         if ("serviceWorker" in navigator) {
