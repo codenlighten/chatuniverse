@@ -16,161 +16,134 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://unpkg.com/bsv@1.5"></script>
     <style>
-      /* start in forest green dark mode */
+      :root {
+        /* Light theme colors */
+        --background-color: #f5f5f5;
+        --text-color: #000;
+        --header-footer-bg-color: #39827a;
+        --button-bg-color: #39827a;
+        --button-text-color: white;
+        --button-hover-bg-color: #23504b;
+      }
+
+      .dark-mode {
+        /* Dark theme colors */
+        --background-color: #121212;
+        --text-color: #fff;
+        --header-footer-bg-color: #333;
+        --button-bg-color: #39827a;
+        --button-text-color: #000;
+        --button-hover-bg-color: #4aa79c;
+      }
+
       body {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
+
+      header,
+      footer {
+        background-color: var(--header-footer-bg-color);
       }
       header {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
         padding: 10px;
-        text-align: center;
       }
       nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
+
+      nav h1 {
+        margin: 0;
+      }
+
+      button {
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
+      }
+
+      button:hover {
+        background-color: var(--button-hover-bg-color);
+      }
+
       #logo {
         width: 50px;
         height: 50px;
+        border-radius: 50%;
+        border: 2px solid white;
+        background-color: #69afa7;
       }
+
       main {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        padding: 10px;
+        padding: 20px;
+        word-wrap: break-word;
       }
+
       aside {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-        padding: 10px;
         width: 20%;
       }
+
       section {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-        padding: 10px;
         width: 75%;
       }
-      footer {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-        padding: 10px;
-        text-align: center;
-      }
-      footer p {
-        margin: 0;
-      }
-      footer span {
-        font-weight: bold;
-      }
+
       ul {
         list-style-type: none;
         padding: 0;
       }
+
       li {
         margin-bottom: 10px;
       }
-      input[type="text"] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-      }
-      button {
-        background-color: #4caf50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-      }
-      button:hover {
-        opacity: 0.8;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-      }
-      aside h2 {
+
+      footer {
         text-align: center;
-      }
-      #previous-rooms-list {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-      }
-      #currentRoom {
-        text-align: center;
-      }
-      #messages {
-        height: 400px;
-        overflow-y: scroll;
-      }
-      #myAddress {
-        font-weight: bold;
-      }
-      #myAddress:hover {
-        cursor: pointer;
-      }
-      #myAddress:active {
-        color: #4caf50;
-      }
-      #myAddress:focus {
-        color: #4caf50;
+        padding: 10px;
       }
 
-      /* Dark mode */
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        header {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        aside {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        section {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        footer {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
+      footer p {
+        margin: 0;
       }
-      /* Light mode */
-      @media (prefers-color-scheme: light) {
-        body {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
+
+      footer span {
+        font-weight: bold;
+      }
+      button,
+      input[type="text"] {
+        margin: 5px;
+      }
+      input[type="text"] {
+        padding: 5px;
+      }
+      input[type="checkbox"] {
+        margin: 5px;
+      }
+      input[type="checkbox"] {
+        padding: 5px;
+      }
+
+      option {
+        padding: 5px;
+      }
+
+      select {
+        padding: 5px;
+      }
+
+      @media (max-width: 768px) {
+        main {
+          flex-direction: column;
         }
-        header {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
+
+        aside,
+        section {
+          width: 100%;
         }
         aside {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
-        }
-        section {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
-        }
-        footer {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
+          margin-bottom: 20px;
         }
       }
     </style>
@@ -180,37 +153,33 @@
       <nav>
         <h1>SatoChat</h1>
         <img src="satochat.png" alt="SatoChat Logo" id="logo" />
+        <button id="theme-toggle">Switch to Dark Mode</button>
       </nav>
     </header>
 
     <main>
       <aside>
         <h2>Rooms</h2>
-        <label for="room-list">Select a room:</label>
-        <select id="room-list">
+        <select id="previous-rooms-list">
           <option value="0">Select a room...</option>
           <!-- Options will be added dynamically -->
         </select>
-        <!-- add room id -->
-        <input type="text" id="room-name" placeholder="Enter a room name" />
         <button id="join-room">Join Room</button>
-        <button id="share-room">Share Room</button>
-        <button id="enable-notifications">Enable Notifications</button>
-        <label for="mute-notifications">Mute Notifications</label>
-        <input type="checkbox" id="mute-notifications" />
+        <button id="shareRoom">Share Room</button>
+        <button id="enableNotifications">Enable Notifications</button>
+        <label for="mute">Mute Notifications</label>
+        <input type="checkbox" id="mute" />
       </aside>
 
       <section>
-        <h1 id="current-room">Current Room</h1>
-        <ul id="chat-messages"></ul>
+        <h1 id="currentRoom">Current Room</h1>
+        <ul id="messages">
+          <!-- Chat messages will be added here dynamically -->
+        </ul>
         <form id="message-form">
-          <input id="username" type="text" placeholder="Username" required />
-          <input
-            id="input-message"
-            type="text"
-            placeholder="Type a message..."
-            required
-          />
+          <input id="username" type="text" placeholder="Username" />
+          <input id="room-name" type="text" placeholder="Room Name" />
+          <input id="input" type="text" placeholder="Type a message..." />
           <button type="submit">Send</button>
         </form>
       </section>
@@ -218,8 +187,7 @@
 
     <footer>
       <p>
-        Your Address:
-        <span id="user-address">Address will be displayed here</span>
+        Your Address: <span id="myAddress">Address will be displayed here</span>
       </p>
     </footer>
 
@@ -229,12 +197,13 @@
       const Buffer = bsv.deps.Buffer;
       const sha256 = bsv.crypto.Hash.sha256;
       const hash256 = bsv.crypto.Hash.sha256sha256;
-      const waterSound = new Audio("water.mp3");
+      const waterSound = new Audio("/water.mp3");
+
       let currentUserName = "";
       let currentRoomHash = "";
       let roomHash = "";
       //default muted
-      // document.getElementById("mute").checked = true;
+      document.getElementById("mute").checked = true;
       const chatKeys = () => {
         const privateKey = new bsv.PrivateKey();
         const publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
@@ -250,10 +219,10 @@
         localStorage.setItem("chatkeys", JSON.stringify(keys));
       }
       const keys = JSON.parse(localStorage.getItem("chatkeys"));
-      // document.getElementById("myAddress").innerHTML = keys.address.toString();
-      // document
-      //   .getElementById("myAddress")
-      //   .setAttribute("title", keys.address.toString());
+      document.getElementById("myAddress").innerHTML = keys.address.toString();
+      document
+        .getElementById("myAddress")
+        .setAttribute("title", keys.address.toString());
       if (!localStorage.getItem("previousRooms")) {
         localStorage.setItem("previousRooms", JSON.stringify([]));
       }
@@ -276,12 +245,12 @@
       var uuid = uuidv4();
       console.log(uuid);
       const address = keys.address.toString();
-      let currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
+      var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
       roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-      currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-      let keepHistory = true;
-      document.getElementById("current-room").innerHTML = currentRoom;
       document.getElementById("room-name").value = currentRoom;
+
+      let keepHistory = true;
+
       $(function () {
         var socket = io();
         const urlParams = new URLSearchParams(window.location.search);
@@ -313,7 +282,7 @@
         }
 
         $("#join-room").click(function () {
-          currentRoom = document.getElementById("room-name").value;
+          currentRoom = $("#room-name").val();
           //if current room is empty then generate new room with address and uuid
           if (currentRoom === "") {
             currentRoom = address + "-" + uuidv4().slice(-4);
@@ -398,7 +367,6 @@
             encryptedMessage: encrypt($("#input").val(), roomHash),
             timestamp: new Date().toLocaleString(),
           });
-          console.log("roomHash", roomHash);
           $("#input").val("");
           return false;
         });
@@ -408,7 +376,6 @@
           if (roomHash && data.encryptedMessage) {
             data.decrypted = decrypt(data.encryptedMessage, roomHash);
             data.decryptedUsername = decrypt(data.username, roomHash);
-            console.log("data.decryptedUsername", data.decryptedUsername);
           } else {
             data.decrypted = "Error decrypting message";
           }
@@ -488,25 +455,44 @@
         return decrypted;
       };
       //mute option add event listener to test audio
-      // document.getElementById("mute").addEventListener("change", (e) => {
-      //   if (e.target.checked) {
-      //     waterSound.pause();
-      //   } else {
-      //     waterSound.play();
-      //   }
-      // });
+      document.getElementById("mute").addEventListener("change", (e) => {
+        if (e.target.checked) {
+          waterSound.pause();
+        } else {
+          waterSound.play();
+        }
+      });
+      document
+        .getElementById("theme-toggle")
+        .addEventListener("click", function () {
+          document.body.classList.toggle("dark-mode");
+          const isDarkMode = document.body.classList.contains("dark-mode");
+          this.textContent = isDarkMode
+            ? "Switch to Light Mode"
+            : "Switch to Dark Mode";
+          // Optionally save the theme preference to localStorage
+          localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+        });
+      document.addEventListener("DOMContentLoaded", function () {
+        const currentTheme = localStorage.getItem("theme") || "light";
+        if (currentTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          document.getElementById("theme-toggle").textContent =
+            "Switch to Light Mode";
+        }
+      });
 
-      // document
-      //   .getElementById("enableNotifications")
-      //   .addEventListener("click", function () {
-      //     if (
-      //       Notification.permission !== "denied" ||
-      //       Notification.permission === "default"
-      //     ) {
-      //       Notification.requestPermission();
-      //       alert("Notifications enabled");
-      //     }
-      //   });
+      document
+        .getElementById("enableNotifications")
+        .addEventListener("click", function () {
+          if (
+            Notification.permission !== "denied" ||
+            Notification.permission === "default"
+          ) {
+            Notification.requestPermission();
+            alert("Notifications enabled");
+          }
+        });
 
       // Check if service workers are supported
 
