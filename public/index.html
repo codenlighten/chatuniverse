@@ -17,21 +17,16 @@
     <script src="https://unpkg.com/bsv@1.5"></script>
     <style>
       /* General styles */
-
-      /* Add box-sizing property to all elements */
       *,
       *::before,
       *::after {
         box-sizing: border-box;
       }
 
-      /* Set default font size and line height */
       html {
         font-size: 16px;
         line-height: 1.5;
       }
-
-      /* Body styles */
 
       body {
         background-color: #0f0f0f;
@@ -42,7 +37,6 @@
       }
 
       /* Header styles */
-
       header {
         background-color: #0f0f0f;
         color: #f0f0f0;
@@ -54,93 +48,73 @@
         justify-content: space-between;
         align-items: center;
       }
-
       #logo {
         width: 50px;
         height: 50px;
       }
 
       /* Main styles */
-
       main {
         display: flex;
-        flex-direction: column; /* Stack main content vertically */
+        justify-content: space-between;
         padding: 10px;
-        word-wrap: break-word;
       }
-
-      /* Section and aside styles */
-
       aside,
       section {
+        width: 30%;
         padding: 10px;
-        margin-bottom: 10px; /* Add margin for spacing */
-        width: 100%; /* Full width on mobile */
       }
-
-      /* Footer styles */
-
-      footer {
+      aside {
         background-color: #0f0f0f;
         color: #f0f0f0;
-        padding: 10px;
-        text-align: center;
       }
-
-      footer p {
-        margin: 0;
+      section {
+        background-color: #f0f0f0;
+        color: #0f0f0f;
       }
-
-      footer span {
-        font-weight: bold;
+      h2 {
+        margin-bottom: 10px;
       }
-
-      /* Form styles */
-
-      form {
-        display: flex;
-        flex-direction: column;
+      label {
+        display: block;
+        margin-bottom: 5px;
       }
-
-      input[type="text"],
+      input,
       select,
       button {
-        width: 100%; /* Full width on mobile */
-        padding: 12px 20px;
-        margin-bottom: 10px; /* Add margin for spacing */
+        margin-bottom: 10px;
+        padding: 10px;
+        width: 100%;
       }
-
       button {
-        background-color: #4caf50;
-        color: white;
+        background-color: #0f0f0f;
+        color: #f0f0f0;
         border: none;
         cursor: pointer;
       }
-
       button:hover {
-        opacity: 0.8;
+        background-color: #f0f0f0;
+        color: #0f0f0f;
       }
-      #joined {
-        display: none;
-        width: 100%;
-      }
-      #joined button {
-        width: 100%;
-        padding: 12px 20px;
+      #room-name {
         margin-bottom: 10px;
       }
-      #joined label {
+      #roomSelect {
+        display: flex;
+        flex-direction: column;
+      }
+      #room-list {
         margin-bottom: 10px;
       }
-      #joined input {
-        margin-bottom: 10px;
+      #clear-room-history {
+        background-color: #f0f0f0;
+        color: #0f0f0f;
+        border: none;
+        cursor: pointer;
       }
-
-      #chat-messages {
-        list-style-type: none;
-        padding: 0;
-        overflow-y: scroll;
-        height: 300px;
+      #clear-room-history:hover {
+        background-color: #0f0f0f;
+        color: #f0f0f0;
       }
 
       .hidden {
@@ -148,97 +122,39 @@
       }
 
       /* Media queries */
-      #message-form {
-        position: fixed; /* Position the message input form fixed at the bottom */
-        bottom: 0;
-        width: 100%;
-        background-color: #1a1a1a;
-        padding: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
       @media (max-width: 768px) {
         main {
-          flex-direction: column-reverse; /* Reverse the main flex direction to stack chat messages on top */
-          height: 100vh; /* Ensure the main takes the full height of the viewport */
+          flex-direction: column;
+          word-wrap: break-word;
         }
-
-        #current {
-          flex-grow: 1; /* Allow the chat messages section to expand and fill remaining space */
-          overflow-y: auto; /* Enable vertical scrolling for chat messages */
-        }
-
-        #message-form {
-          position: fixed; /* Position the message input form fixed at the bottom */
-          bottom: 0;
+        aside,
+        section {
           width: 100%;
-          background-color: #1a1a1a;
-          padding: 10px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
         }
-
-        #message-form input[type="text"],
-        #message-form button {
-          flex: 1; /* Make input fields and button occupy remaining space */
-          margin: 5px;
-          padding: 8px;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-        }
-
-        #message-form button {
-          background-color: #4caf50;
-          color: white;
-          cursor: pointer;
+        #chat-messages {
+          height: 100px;
+          overflow-y: scroll;
         }
       }
 
       /* Dark mode */
       @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        header {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        aside {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
-        section {
-          background-color: #0f0f0f;
-          color: #f0f0f0;
-        }
+        body,
+        header,
+        aside,
+        section,
         footer {
           background-color: #0f0f0f;
           color: #f0f0f0;
         }
       }
+
       /* Light mode */
       @media (prefers-color-scheme: light) {
-        body {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
-        }
-        header {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
-        }
-        aside {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
-        }
-        section {
-          background-color: #f0f0f0;
-          color: #0f0f0f;
-        }
+        body,
+        header,
+        aside,
+        section,
         footer {
           background-color: #f0f0f0;
           color: #0f0f0f;
@@ -281,28 +197,29 @@
         <ul class="hidden" id="chat-messages">
           <!-- Chat messages will be added here dynamically -->
         </ul>
-        <form id="message-form">
-          <input id="username" type="text" placeholder="Username" required />
-          <input
-            id="input-message"
-            type="text"
-            placeholder="Type a message..."
-            required
-          />
-          <button type="submit">Send</button>
-        </form>
-        <div class="hidden" id="joined">
-          <button id="share-room">Share Room</button>
-          <label for="mute-notifications">Mute Notifications</label>
-          <input type="checkbox" id="mute-notifications" />
+        <div id="bottom">
+          <form id="message-form">
+            <input id="username" type="text" placeholder="Username" required />
+            <input
+              id="input-message"
+              type="text"
+              placeholder="Type a message..."
+              required
+            />
+            <button type="submit">Send</button>
+          </form>
+          <div class="hidden" id="joined">
+            <button id="share-room">Share Room</button>
+            <label for="mute-notifications">Mute Notifications</label>
+            <input type="checkbox" id="mute-notifications" />
+          </div>
+          <footer>
+            <!-- copyright 2024 -->
+            <p><span>&copy;</span> 2024 SatoChat</p>
+          </footer>
         </div>
       </section>
     </main>
-
-    <footer>
-      <!-- copyright 2024 -->
-      <p><span>&copy;</span> 2024 SatoChat</p>
-    </footer>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
