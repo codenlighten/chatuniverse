@@ -16,7 +16,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://unpkg.com/bsv@1.5"></script>
     <style>
-      /* start in forest green dark mode */
+      /* General styles */
+
+      /* Add box-sizing property to all elements */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      /* Set default font size and line height */
+      html {
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      /* Body styles */
+
       body {
         background-color: #0f0f0f;
         color: #f0f0f0;
@@ -24,128 +40,105 @@
         margin: 0;
         padding: 0;
       }
+
+      /* Header styles */
+
       header {
         background-color: #0f0f0f;
         color: #f0f0f0;
         padding: 10px;
         text-align: center;
       }
+
       nav {
         display: flex;
-        justify-content: space-between;
+        justify-content: center; /* Center navigation items */
         align-items: center;
+        margin-bottom: 10px; /* Add margin for spacing */
       }
+
       #logo {
         width: 50px;
         height: 50px;
       }
+
+      /* Main styles */
+
       main {
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
+        flex-direction: column; /* Stack main content vertically */
         padding: 10px;
       }
-      aside {
-        background-color: #0f0f0f;
-        color: #f0f0f0;
-        padding: 10px;
-        width: 20%;
-      }
+
+      /* Section and aside styles */
+
+      aside,
       section {
         background-color: #0f0f0f;
         color: #f0f0f0;
         padding: 10px;
-        width: 75%;
+        width: 100%; /* Full width on mobile */
+        margin-bottom: 20px; /* Add margin for spacing */
       }
+
+      /* Footer styles */
+
       footer {
         background-color: #0f0f0f;
         color: #f0f0f0;
         padding: 10px;
         text-align: center;
       }
+
       footer p {
         margin: 0;
       }
+
       footer span {
         font-weight: bold;
       }
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
-      li {
-        margin-bottom: 10px;
-      }
-      input[type="text"] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-      }
-      button {
-        background-color: #4caf50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-      }
-      button:hover {
-        opacity: 0.8;
-      }
+
+      /* Form styles */
+
       form {
         display: flex;
         flex-direction: column;
       }
-      aside h2 {
-        text-align: center;
-      }
-      #previous-rooms-list {
-        width: 100%;
+
+      input[type="text"],
+      select,
+      button {
+        width: 100%; /* Full width on mobile */
         padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
+        margin-bottom: 10px; /* Add margin for spacing */
       }
-      #currentRoom {
-        text-align: center;
-      }
-      #messages {
-        height: 400px;
-        overflow-y: scroll;
-      }
-      #myAddress {
-        font-weight: bold;
-      }
-      #myAddress:hover {
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
         cursor: pointer;
       }
-      #myAddress:active {
-        color: #4caf50;
-      }
-      #myAddress:focus {
-        color: #4caf50;
-      }
-      option {
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
+
+      button:hover {
+        opacity: 0.8;
       }
 
-      select {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        box-sizing: border-box;
-      }
+      /* Media queries */
 
-      /* media queries */
-      @media (max-width: 768px) {
-        aside {
-          width: 100%;
+      @media (min-width: 769px) {
+        /* For screens larger than 768px (tablets and desktops) */
+        main {
+          flex-direction: row; /* Align main content side by side */
         }
+
+        aside {
+          width: 20%; /* Sidebar width */
+          margin-right: 20px; /* Add margin for spacing */
+        }
+
         section {
-          width: 100%;
+          width: 75%; /* Main content width */
         }
       }
 
