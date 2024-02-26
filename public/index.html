@@ -126,6 +126,18 @@
       #myAddress:focus {
         color: #4caf50;
       }
+      option {
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+      }
+
+      select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+      }
 
       /* Dark mode */
       @media (prefers-color-scheme: dark) {
@@ -191,10 +203,10 @@
           <option value="0">Select a room...</option>
           <!-- Options will be added dynamically -->
         </select>
-        <!-- add room id -->
-        <input type="text" id="room-name" placeholder="Enter a room name" />
         <button id="join-room">Join Room</button>
         <button id="share-room">Share Room</button>
+        <!-- clear room history -->
+        <button id="clear-room-history">Clear Room History</button>
         <button id="enable-notifications">Enable Notifications</button>
         <label for="mute-notifications">Mute Notifications</label>
         <input type="checkbox" id="mute-notifications" />
@@ -202,8 +214,11 @@
 
       <section>
         <h1 id="current-room">Current Room</h1>
-        <ul id="chat-messages"></ul>
+        <ul id="chat-messages">
+          <!-- Chat messages will be added here dynamically -->
+        </ul>
         <form id="message-form">
+          <input id="room-name" type="text" placeholder="Room Name" />
           <input id="username" type="text" placeholder="Username" required />
           <input
             id="input-message"
@@ -226,300 +241,328 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      const Buffer = bsv.deps.Buffer;
-      const sha256 = bsv.crypto.Hash.sha256;
-      const hash256 = bsv.crypto.Hash.sha256sha256;
-      const waterSound = new Audio("water.mp3");
-      let currentUserName = "";
-      let currentRoomHash = "";
-      let roomHash = "";
-      //default muted
-      // document.getElementById("mute").checked = true;
-      const chatKeys = () => {
-        const privateKey = new bsv.PrivateKey();
-        const publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
-        const address = bsv.Address.fromPublicKey(publicKey);
-        return {
-          privateKey: privateKey.toString(),
-          publicKey: publicKey.toString(),
-          address: address.toString(),
+      document.addEventListener("DOMContentLoaded", function () {
+        const Buffer = bsv.deps.Buffer;
+        const sha256 = bsv.crypto.Hash.sha256;
+        const hash256 = bsv.crypto.Hash.sha256sha256;
+        const waterSound = new Audio("/water.mp3");
+
+        let currentUserName = "";
+        let currentRoomHash = "";
+        let roomHash = "";
+
+        // Default muted
+        document.getElementById("mute-notifications").checked = true;
+
+        const chatKeys = () => {
+          const privateKey = new bsv.PrivateKey();
+          const publicKey = bsv.PublicKey.fromPrivateKey(privateKey);
+          const address = bsv.Address.fromPublicKey(publicKey);
+          return {
+            privateKey: privateKey.toString(),
+            publicKey: publicKey.toString(),
+            address: address.toString(),
+          };
         };
-      };
-      if (!localStorage.getItem("chatkeys")) {
-        const keys = chatKeys();
-        localStorage.setItem("chatkeys", JSON.stringify(keys));
-      }
-      const keys = JSON.parse(localStorage.getItem("chatkeys"));
-      // document.getElementById("myAddress").innerHTML = keys.address.toString();
-      // document
-      //   .getElementById("myAddress")
-      //   .setAttribute("title", keys.address.toString());
-      if (!localStorage.getItem("previousRooms")) {
-        localStorage.setItem("previousRooms", JSON.stringify([]));
-      }
-      const previousRooms = JSON.parse(
-        localStorage.getItem("previousRooms")
-      ).reverse();
-      previousRooms.forEach((room) => {
-        $("#previous-rooms-list").append($("<option>").text(room).val(room));
-      });
-      const uuidv4 = () => {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-          /[xy]/g,
-          function (c) {
-            var r = (Math.random() * 16) | 0,
-              v = c == "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-          }
-        );
-      };
-      var uuid = uuidv4();
-      console.log(uuid);
-      const address = keys.address.toString();
-      let currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
-      roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-      currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-      let keepHistory = true;
-      document.getElementById("current-room").innerHTML = currentRoom;
-      document.getElementById("room-name").value = currentRoom;
-      $(function () {
-        var socket = io();
-        const urlParams = new URLSearchParams(window.location.search);
-        const room = urlParams.get("room");
-        if (room) {
-          currentRoom = room; // Update current room based on URL
-          currentRoom = currentRoom.replace(/\s/g, "");
-          document.getElementById("room-name").value = room;
-          roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          socket.emit("join room", currentRoomHash);
-          document.getElementById("currentRoom").innerHTML = room;
-          document.getElementById("currentRoom").setAttribute("title", room);
-          // Add room to previous rooms list
-          //remove from url
-          window.history.replaceState({}, document.title, "/");
-          if (!previousRooms.includes(room)) {
-            previousRooms.push(room);
-            localStorage.setItem(
-              "previousRooms",
-              JSON.stringify(previousRooms)
-            );
-            $("#previous-rooms-list").append(
-              $("<option>").text(room).val(room)
-            );
-          }
-          // Clear chat messages
-          $("#messages").html(""); // Clear chat messages
+
+        if (!localStorage.getItem("chatkeys")) {
+          const keys = chatKeys();
+          localStorage.setItem("chatkeys", JSON.stringify(keys));
         }
 
-        $("#join-room").click(function () {
-          currentRoom = document.getElementById("room-name").value;
-          //if current room is empty then generate new room with address and uuid
-          if (currentRoom === "") {
-            currentRoom = address + "-" + uuidv4().slice(-4);
-            document.getElementById("room-name").value = currentRoom;
-          }
-          //if not contain "-" then add "-" and uuid
-          if (!currentRoom.includes("-")) {
-            // remove spaces
-            currentRoom = currentRoom.replace(/\s/g, "");
-            currentRoom = currentRoom + "-" + uuidv4().slice(-4);
-            document.getElementById("room-name").value = currentRoom;
-          }
-          currentRoom = currentRoom.replace(/\s/g, "");
-          roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          socket.emit("join room", currentRoomHash);
-          document.getElementById("currentRoom").innerHTML = currentRoom;
-          document
-            .getElementById("currentRoom")
-            .setAttribute("title", currentRoom);
-          // Add room to previous rooms list
-          if (!previousRooms.includes(currentRoom)) {
-            previousRooms.push(currentRoom);
-            localStorage.setItem(
-              "previousRooms",
-              JSON.stringify(previousRooms)
-            );
-            $("#previous-rooms-list").append(
-              $("<option>").text(currentRoom).val(currentRoom)
-            );
-          }
-          // Clear chat messages
-          $("#messages").html(""); // Clear chat messages
+        const keys = JSON.parse(localStorage.getItem("chatkeys"));
+        document.getElementById("user-address").innerHTML =
+          keys.address.toString();
+        document
+          .getElementById("user-address")
+          .setAttribute("title", keys.address.toString());
+
+        if (!localStorage.getItem("previousRooms")) {
+          localStorage.setItem("previousRooms", JSON.stringify([]));
+        }
+
+        const previousRooms = JSON.parse(
+          localStorage.getItem("previousRooms")
+        ).reverse();
+
+        previousRooms.forEach((room) => {
+          document.getElementById(
+            "room-list"
+          ).innerHTML += `<option value="${room}">${room}</option>`;
         });
 
-        // Load old messages
-        socket.on("load old messages", function (data) {
-          data.forEach((message) => {
-            if (roomHash && message.encryptedMessage) {
-              message.decrypted = decrypt(message.encryptedMessage, roomHash);
-              message.decryptedUsername = decrypt(message.username, roomHash);
-            } else {
-              message.decrypted = "Error decrypting message";
+        const uuidv4 = () => {
+          return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+            /[xy]/g,
+            function (c) {
+              var r = (Math.random() * 16) | 0,
+                v = c == "x" ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
             }
-            $("#messages").append(
-              $("<li>").text(
-                `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted}`
-              )
-            );
+          );
+        };
+
+        var uuid = uuidv4();
+        console.log(uuid);
+        const address = keys.address.toString();
+        var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
+        roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+        document.getElementById("room-name").value = currentRoom;
+
+        let keepHistory = true;
+
+        $(function () {
+          var socket = io();
+          const urlParams = new URLSearchParams(window.location.search);
+          const room = urlParams.get("room");
+          if (room) {
+            currentRoom = room; // Update current room based on URL
+            currentRoom = currentRoom.replace(/\s/g, "");
+            document.getElementById("room-name").value = room;
+            roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            socket.emit("join room", currentRoomHash);
+            document.getElementById("current-room").innerHTML = room;
+            document.getElementById("current-room").setAttribute("title", room);
+            // Add room to previous rooms list
+            //remove from url
+            window.history.replaceState({}, document.title, "/");
+            if (!previousRooms.includes(room)) {
+              previousRooms.push(room);
+              localStorage.setItem(
+                "previousRooms",
+                JSON.stringify(previousRooms)
+              );
+              document.getElementById(
+                "room-list"
+              ).innerHTML += `<option value="${room}">${room}</option>`;
+            }
+            // Clear chat messages
+            $("#chat-messages").html(""); // Clear chat messages
+          }
+
+          $("#join-room").click(function () {
+            currentRoom = $("#room-name").val();
+            //if current room is empty then generate new room with address and uuid
+            if (currentRoom === "") {
+              currentRoom = address + "-" + uuidv4().slice(-4);
+              document.getElementById("room-name").value = currentRoom;
+            }
+            //if not contain "-" then add "-" and uuid
+            if (!currentRoom.includes("-")) {
+              // remove spaces
+              currentRoom = currentRoom.replace(/\s/g, "");
+              currentRoom = currentRoom + "-" + uuidv4().slice(-4);
+              document.getElementById("room-name").value = currentRoom;
+            }
+            currentRoom = currentRoom.replace(/\s/g, "");
+            roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            socket.emit("join room", currentRoomHash);
+            document.getElementById("current-room").innerHTML = currentRoom;
+            document
+              .getElementById("current-room")
+              .setAttribute("title", currentRoom);
+            // Add room to previous rooms list
+            if (!previousRooms.includes(currentRoom)) {
+              previousRooms.push(currentRoom);
+              localStorage.setItem(
+                "previousRooms",
+                JSON.stringify(previousRooms)
+              );
+              document.getElementById(
+                "room-list"
+              ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
+            }
+            // Clear chat messages
+            $("#chat-messages").html(""); // Clear chat messages
+          });
+
+          // Load old messages
+          socket.on("load old messages", function (data) {
+            data.forEach((message) => {
+              if (roomHash && message.encryptedMessage) {
+                message.decrypted = decrypt(message.encryptedMessage, roomHash);
+                message.decryptedUsername = decrypt(message.username, roomHash);
+              } else {
+                message.decrypted = "Error decrypting message";
+              }
+              $("#chat-messages").append(
+                $("<li>").text(
+                  `${message.timestamp} - ${message.decryptedUsername}: ${message.decrypted}`
+                )
+              );
+              // append address to message as new line
+              $("#chat-messages").append(
+                $("<p>")
+                  .text(`Author Address: ${message.address}`)
+                  .css("font-size", "10px")
+              );
+            });
+          });
+
+          // Chat message form submission
+          $("#message-form").submit(function (e) {
+            e.preventDefault(); // Prevents page reloading
+            if (
+              $("#username").val() === "" ||
+              $("#input-message").val() === "" ||
+              currentRoom === ""
+            ) {
+              alert("Please enter a username, message, and room name");
+              return false;
+            }
+            currentUserName = $("#username").val();
+            const encryptedUserName = encrypt(currentUserName, roomHash);
+            roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
+            // localStorage.setItem("name", currentUserName);
+            socket.emit("chat message", {
+              room: currentRoomHash,
+              // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
+              username: encryptedUserName,
+              // message: $("#input").val(),
+              history: keepHistory,
+              address: keys.address.toString(),
+              encryptedMessage: encrypt($("#input-message").val(), roomHash),
+              timestamp: new Date().toLocaleString(),
+            });
+            $("#input-message").val("");
+            return false;
+          });
+
+          // Receiving chat messages
+          socket.on("chat message", function (data) {
+            if (roomHash && data.encryptedMessage) {
+              data.decrypted = decrypt(data.encryptedMessage, roomHash);
+              data.decryptedUsername = decrypt(data.username, roomHash);
+            } else {
+              data.decrypted = "Error decrypting message";
+            }
+            if (
+              "serviceWorker" in navigator &&
+              navigator.serviceWorker.controller
+            ) {
+              // Send a message to the service worker
+              navigator.serviceWorker.controller.postMessage({
+                type: "newMessage",
+                data: data,
+              });
+            }
             // append address to message as new line
-            $("#messages").append(
+            $("#chat-messages").prepend(
               $("<p>")
-                .text(`Author Address: ${message.address}`)
+                .text(`Author Address: ${data.address}`)
                 .css("font-size", "10px")
             );
+            $("#chat-messages").prepend(
+              $("<li>").text(
+                `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
+              )
+            );
+
+            if (
+              !document.getElementById("mute-notifications").checked &&
+              data.username !== currentUserName
+            )
+              waterSound.play();
           });
         });
 
-        // Chat message form submission
-        $("form").submit(function (e) {
-          e.preventDefault(); // Prevents page reloading
-          if (
-            $("#username").val() === "" ||
-            $("#input").val() === "" ||
-            currentRoom === ""
-          ) {
-            alert("Please enter a username, message, and room name");
+        // Previous rooms select option list
+        $("#room-list").change(function () {
+          var selectedRoom = $(this).children("option:selected").val();
+          if (selectedRoom !== "0") {
+            window.location.href =
+              window.location.href + "?room=" + selectedRoom;
+          }
+        });
+
+        // Share room button
+        $("#share-room").click(function () {
+          if (document.getElementById("current-room").innerHTML === "") {
+            alert("Please enter a room name");
             return false;
           }
-          currentUserName = $("#username").val();
-          const encryptedUserName = encrypt(currentUserName, roomHash);
-          roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          // localStorage.setItem("name", currentUserName);
-          socket.emit("chat message", {
-            room: currentRoomHash,
-            // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
-            username: encryptedUserName,
-            // message: $("#input").val(),
-            history: keepHistory,
-            address: keys.address.toString(),
-            encryptedMessage: encrypt($("#input").val(), roomHash),
-            timestamp: new Date().toLocaleString(),
-          });
-          console.log("roomHash", roomHash);
-          $("#input").val("");
-          return false;
+          currentRoom = currentRoom.replace(/\s/g, "");
+          let urlWithRoom = window.location.href + "?room=" + currentRoom;
+          // navigator.clipboard.writeText(urlWithRoom);
+          // copy for mobile devices
+          const el = document.createElement("textarea");
+          el.value = urlWithRoom;
+          el.setAttribute("readonly", "");
+          el.style.position = "absolute";
+          el.style.left = "-9999px";
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand("copy");
+          document.body.removeChild(el);
+
+          alert("Copied room link to clipboard");
+          document
+            .getElementById("current-room")
+            .setAttribute("title", currentRoom);
+          document.getElementById("current-room").innerHTML = currentRoom;
         });
 
-        // Receiving chat messages
-        socket.on("chat message", function (data) {
-          if (roomHash && data.encryptedMessage) {
-            data.decrypted = decrypt(data.encryptedMessage, roomHash);
-            data.decryptedUsername = decrypt(data.username, roomHash);
-            console.log("data.decryptedUsername", data.decryptedUsername);
-          } else {
-            data.decrypted = "Error decrypting message";
-          }
-          if (
-            "serviceWorker" in navigator &&
-            navigator.serviceWorker.controller
-          ) {
-            // Send a message to the service worker
-            navigator.serviceWorker.controller.postMessage({
-              type: "newMessage",
-              data: data,
-            });
-          }
-          // append address to message as new line
-          $("#messages").prepend(
-            $("<p>")
-              .text(`Author Address: ${data.address}`)
-              .css("font-size", "10px")
+        const encrypt = (message, password) => {
+          const encrypted = CryptoJS.AES.encrypt(message, password).toString();
+          return encrypted;
+        };
+
+        const decrypt = (encrypted, password) => {
+          const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(
+            CryptoJS.enc.Utf8
           );
-          $("#messages").prepend(
-            $("<li>").text(
-              `${data.timestamp} - ${data.decryptedUsername}: ${data.decrypted}`
-            )
-          );
+          return decrypted;
+        };
 
-          if (
-            !document.getElementById("mute").checked &&
-            data.username !== currentUserName
-          )
-            waterSound.play();
-        });
-      });
-
-      // Previous rooms select option list
-      $("#previous-rooms-list").change(function () {
-        var selectedRoom = $(this).children("option:selected").val();
-        if (selectedRoom !== "0") {
-          window.location.href = window.location.href + "?room=" + selectedRoom;
-        }
-      });
-
-      // Share room button
-      $("#shareRoom").click(function () {
-        if (document.getElementById("currentRoom").innerHTML === "") {
-          alert("Please enter a room name");
-          return false;
-        }
-        currentRoom = currentRoom.replace(/\s/g, "");
-        let urlWithRoom = window.location.href + "?room=" + currentRoom;
-        // navigator.clipboard.writeText(urlWithRoom);
-        //copy for mobile devices
-        const el = document.createElement("textarea");
-        el.value = urlWithRoom;
-        el.setAttribute("readonly", "");
-        el.style.position = "absolute";
-        el.style.left = "-9999px";
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand("copy");
-        document.body.removeChild(el);
-
-        alert("Copied room link to clipboard");
+        // Mute option add event listener to test audio
         document
-          .getElementById("currentRoom")
-          .setAttribute("title", currentRoom);
-        document.getElementById("currentRoom").innerHTML = currentRoom;
+          .getElementById("mute-notifications")
+          .addEventListener("change", (e) => {
+            if (e.target.checked) {
+              waterSound.pause();
+            } else {
+              waterSound.play();
+            }
+          });
+
+        document
+          .getElementById("enable-notifications")
+          .addEventListener("click", function () {
+            if (
+              Notification.permission !== "denied" ||
+              Notification.permission === "default"
+            ) {
+              Notification.requestPermission();
+              alert("Notifications enabled");
+            }
+          });
+
+        // Check if service workers are supported
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then(function (registration) {
+              console.log("Service Worker Registered", registration);
+            })
+            .catch(function (error) {
+              console.log("Service Worker Registration Failed", error);
+            });
+        }
       });
 
-      const encrypt = (message, password) => {
-        const encrypted = CryptoJS.AES.encrypt(message, password).toString();
-        return encrypted;
-      };
-      const decrypt = (encrypted, password) => {
-        const decrypted = CryptoJS.AES.decrypt(encrypted, password).toString(
-          CryptoJS.enc.Utf8
-        );
-        return decrypted;
-      };
-      //mute option add event listener to test audio
-      // document.getElementById("mute").addEventListener("change", (e) => {
-      //   if (e.target.checked) {
-      //     waterSound.pause();
-      //   } else {
-      //     waterSound.play();
-      //   }
-      // });
-
-      // document
-      //   .getElementById("enableNotifications")
-      //   .addEventListener("click", function () {
-      //     if (
-      //       Notification.permission !== "denied" ||
-      //       Notification.permission === "default"
-      //     ) {
-      //       Notification.requestPermission();
-      //       alert("Notifications enabled");
-      //     }
-      //   });
-
-      // Check if service workers are supported
-
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/service-worker.js")
-          .then(function (registration) {
-            console.log("Service Worker Registered", registration);
-          })
-          .catch(function (error) {
-            console.log("Service Worker Registration Failed", error);
-          });
-      }
+      //clear room history
+      document
+        .getElementById("clear-room-history")
+        .addEventListener("click", function () {
+          if (confirm("Are you sure you want to clear room history?")) {
+            $("#chat-messages").html(""); // Clear chat messages
+            //clear local storage
+            localStorage.removeItem("previousRooms");
+          }
+        });
     </script>
   </body>
 </html>

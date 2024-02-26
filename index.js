@@ -15,9 +15,9 @@ db.ready(() => {
 
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-  res.send("<h1>Welcome to Chat Universe!</h1>");
-});
+// app.get("/", (req, res) => {
+//   res.send("<h1>Welcome to Chat Universe!</h1>");
+// });
 
 io.on("connection", (socket) => {
   socket.on("join room", async (room) => {
