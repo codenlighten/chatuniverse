@@ -203,16 +203,18 @@
 
     <main>
       <aside>
-        <h2>Rooms</h2>
-        <label for="room-list">Select a room:</label>
-        <select id="room-list">
-          <option value="0">Select a room...</option>
-          <!-- Options will be added dynamically -->
-        </select>
-        <button id="join-room">Join Room</button>
-        <button id="share-room">Share Room</button>
-        <!-- clear room history -->
-        <button id="clear-room-history">Clear Room History</button>
+        <div id="roomSelect">
+          <h2>Rooms</h2>
+          <label for="room-list">Select a room:</label>
+          <select id="room-list">
+            <option value="0">Select a room...</option>
+            <!-- Options will be added dynamically -->
+          </select>
+          <button id="join-room">Join Room</button>
+          <button id="share-room">Share Room</button>
+          <!-- clear room history -->
+          <button id="clear-room-history">Clear Room History</button>
+        </div>
         <button id="enable-notifications">Enable Notifications</button>
         <label for="mute-notifications">Mute Notifications</label>
         <input type="checkbox" id="mute-notifications" />
@@ -382,6 +384,8 @@
             }
             // Clear chat messages
             $("#chat-messages").html(""); // Clear chat messages
+            //hide room select
+            document.getElementById("roomSelect").style.display = "none";
           });
 
           // Load old messages
