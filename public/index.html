@@ -251,7 +251,7 @@
           Your Address:
           <span id="user-address">Address will be displayed here</span>
         </p>
-        <ul id="chat-messages">
+        <ul class="hidden" id="chat-messages">
           <!-- Chat messages will be added here dynamically -->
         </ul>
         <form id="message-form">
@@ -382,6 +382,11 @@
             $("#chat-messages").html(""); // Clear chat messages
             document.getElementById("roomSelect").style.display = "none";
             document.getElementById("joined").style.display = "block";
+            document.getElementById(
+              "chat-messages"
+            ).innerHTML = `<li>Joined room: ${room}</li>`;
+            //remove hidden class
+            document.getElementById("chat-messages").classList.remove("hidden");
           }
 
           $("#join-room").click(function () {
@@ -418,6 +423,13 @@
               ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
               document.getElementById("roomSelect").style.display = "none";
               document.getElementById("joined").style.display = "block";
+              document.getElementById(
+                "chat-messages"
+              ).innerHTML = `<li>Joined room: ${currentRoom}</li>`;
+              //remove hidden class
+              document
+                .getElementById("chat-messages")
+                .classList.remove("hidden");
             }
             // Clear chat messages
             $("#chat-messages").html(""); // Clear chat messages
@@ -465,6 +477,13 @@
               ).innerHTML += `<option value="${currentRoom}">${currentRoom}</option>`;
               document.getElementById("roomSelect").style.display = "none";
               document.getElementById("joined").style.display = "block";
+              document.getElementById(
+                "chat-messages"
+              ).innerHTML = `<li>Joined room: ${currentRoom}</li>`;
+              //remove hidden class
+              document
+                .getElementById("chat-messages")
+                .classList.remove("hidden");
             }
             // Clear chat messages
             $("#chat-messages").html(""); // Clear chat messages
