@@ -17,7 +17,6 @@
     <script src="https://unpkg.com/bsv@1.5"></script>
     <style>
       :root {
-        /* Light theme colors */
         --background-color: #f5f5f5;
         --text-color: #000;
         --header-footer-bg-color: #39827a;
@@ -27,7 +26,6 @@
       }
 
       .dark-mode {
-        /* Dark theme colors */
         --background-color: #121212;
         --text-color: #fff;
         --header-footer-bg-color: #333;
@@ -39,15 +37,19 @@
       body {
         background-color: var(--background-color);
         color: var(--text-color);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       header,
       footer {
         background-color: var(--header-footer-bg-color);
-      }
-      header {
+        color: var(--text-color);
         padding: 10px;
       }
+
       nav {
         display: flex;
         justify-content: space-between;
@@ -56,11 +58,17 @@
 
       nav h1 {
         margin: 0;
+        font-size: 1.5em;
       }
 
       button {
         background-color: var(--button-bg-color);
         color: var(--button-text-color);
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
       }
 
       button:hover {
@@ -68,8 +76,8 @@
       }
 
       #logo {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         border: 2px solid white;
         background-color: #69afa7;
@@ -77,17 +85,18 @@
 
       main {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         padding: 20px;
         word-wrap: break-word;
       }
 
       aside {
-        width: 20%;
+        width: 100%;
+        margin-bottom: 20px;
       }
 
       section {
-        width: 75%;
+        width: 100%;
       }
 
       ul {
@@ -101,7 +110,6 @@
 
       footer {
         text-align: center;
-        padding: 10px;
       }
 
       footer p {
@@ -111,39 +119,33 @@
       footer span {
         font-weight: bold;
       }
+
       button,
-      input[type="text"] {
-        margin: 5px;
-      }
-      input[type="text"] {
-        padding: 5px;
-      }
-      input[type="checkbox"] {
-        margin: 5px;
-      }
-      input[type="checkbox"] {
-        padding: 5px;
-      }
-
-      option {
-        padding: 5px;
-      }
-
+      input[type="text"],
       select {
-        padding: 5px;
+        margin: 5px;
+        padding: 10px;
+        width: calc(100% - 30px);
+        box-sizing: border-box;
+        font-size: 1em;
       }
 
-      @media (max-width: 768px) {
+      input[type="checkbox"] {
+        margin: 5px;
+      }
+
+      @media (min-width: 769px) {
         main {
-          flex-direction: column;
+          flex-direction: row;
         }
 
-        aside,
-        section {
-          width: 100%;
-        }
         aside {
-          margin-bottom: 20px;
+          width: 20%;
+          margin-right: 20px;
+        }
+
+        section {
+          width: 75%;
         }
       }
     </style>
@@ -248,6 +250,22 @@
       var currentRoom = address + "-" + uuidv4().slice(-4); // Global current room variable
       roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
       document.getElementById("room-name").value = currentRoom;
+      //join current room
+      document.getElementById("currentRoom").innerHTML = currentRoom;
+      document.getElementById("currentRoom").setAttribute("title", currentRoom);
+      // Add room to previous rooms list
+      if (
+        !previousRooms.includes(currentRoom) &&
+        confirm("Join newly created room?")
+      ) {
+        previousRooms.push(currentRoom);
+        localStorage.setItem("previousRooms", JSON.stringify(previousRooms));
+        $("#previous-rooms-list").append(
+          $("<option>").text(currentRoom).val(currentRoom)
+        );
+      }
+
+      //join room
 
       let keepHistory = true;
 
@@ -282,6 +300,10 @@
         }
 
         $("#join-room").click(function () {
+          joinRoom(socket);
+        });
+
+        function joinRoom(socket) {
           currentRoom = $("#room-name").val();
           //if current room is empty then generate new room with address and uuid
           if (currentRoom === "") {
@@ -316,8 +338,8 @@
           }
           // Clear chat messages
           $("#messages").html(""); // Clear chat messages
-        });
-
+        }
+        joinRoom(socket);
         // Load old messages
         socket.on("load old messages", function (data) {
           data.forEach((message) => {
@@ -352,16 +374,16 @@
             alert("Please enter a username, message, and room name");
             return false;
           }
+          if (currentRoom === "") {
+            joinRoom(socket);
+          }
           currentUserName = $("#username").val();
           const encryptedUserName = encrypt(currentUserName, roomHash);
           roomHash = hash256(Buffer.from(currentRoom)).toString("hex");
           currentRoomHash = hash256(Buffer.from(currentRoom)).toString("hex");
-          // localStorage.setItem("name", currentUserName);
           socket.emit("chat message", {
             room: currentRoomHash,
-            // roomHash: sha256(Buffer.from(currentRoom)).toString("hex"),
             username: encryptedUserName,
-            // message: $("#input").val(),
             history: keepHistory,
             address: keys.address.toString(),
             encryptedMessage: encrypt($("#input").val(), roomHash),
