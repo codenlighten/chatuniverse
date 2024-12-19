@@ -23,6 +23,10 @@
         --button-bg-color: #39827a;
         --button-text-color: white;
         --button-hover-bg-color: #23504b;
+        --card-bg-color: #ffffff;
+        --border-color: #ddd;
+        --message-bg-color: #e9ecef;
+        --message-hover-bg-color: #f8f9fa;
       }
 
       .dark-mode {
@@ -30,45 +34,75 @@
         --text-color: #fff;
         --header-footer-bg-color: #333;
         --button-bg-color: #39827a;
-        --button-text-color: #000;
+        --button-text-color: white;
         --button-hover-bg-color: #4aa79c;
+        --card-bg-color: #1e1e1e;
+        --border-color: #404040;
+        --message-bg-color: #2d2d2d;
+        --message-hover-bg-color: #383838;
       }
 
       body {
         background-color: var(--background-color);
         color: var(--text-color);
-        font-family: Arial, sans-serif;
+        font-family: 'Segoe UI', Arial, sans-serif;
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
-      header,
-      footer {
+      header {
         background-color: var(--header-footer-bg-color);
-        color: var(--text-color);
-        padding: 10px;
+        color: white;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
 
       nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
 
       nav h1 {
         margin: 0;
-        font-size: 1.5em;
+        font-size: 1.8em;
+        color: white;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
       }
 
       button {
         background-color: var(--button-bg-color);
         color: var(--button-text-color);
         border: none;
-        padding: 10px;
+        padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 1em;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      button i {
+        font-size: 1.1em;
       }
 
       button:hover {
@@ -84,68 +118,142 @@
       }
 
       main {
+        flex: 1;
         display: flex;
         flex-direction: column;
         padding: 20px;
-        word-wrap: break-word;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .welcome-message {
+        background-color: var(--card-bg-color);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
       }
 
       aside {
-        width: 100%;
+        background-color: var(--card-bg-color);
+        padding: 20px;
+        border-radius: 8px;
         margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+      }
+
+      .room-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       section {
+        background-color: var(--card-bg-color);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+        flex: 1;
+      }
+
+      #messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        max-height: 400px;
+        overflow-y: auto;
+        border-radius: 8px;
+        background-color: var(--message-bg-color);
+      }
+
+      #messages li {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 4px;
+        background-color: var(--message-bg-color);
+        transition: background-color 0.2s ease;
+      }
+
+      #messages li:hover {
+        background-color: var(--message-hover-bg-color);
+      }
+
+      #message-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .input-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 1em;
+        background-color: var(--card-bg-color);
+        color: var(--text-color);
+      }
+
+      select {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 1em;
+        background-color: var(--card-bg-color);
+        color: var(--text-color);
         width: 100%;
       }
 
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      li {
-        margin-bottom: 10px;
+      .notification-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
       }
 
       footer {
+        background-color: var(--header-footer-bg-color);
+        color: white;
+        padding: 15px;
         text-align: center;
+        margin-top: auto;
       }
 
       footer p {
         margin: 0;
+        font-size: 0.9em;
       }
 
       footer span {
         font-weight: bold;
-      }
-
-      button,
-      input[type="text"],
-      select {
-        margin: 5px;
-        padding: 10px;
-        width: calc(100% - 30px);
-        box-sizing: border-box;
-        font-size: 1em;
-      }
-
-      input[type="checkbox"] {
-        margin: 5px;
+        background: rgba(255,255,255,0.1);
+        padding: 4px 8px;
+        border-radius: 4px;
       }
 
       @media (min-width: 769px) {
         main {
           flex-direction: row;
+          gap: 20px;
         }
 
         aside {
-          width: 20%;
-          margin-right: 20px;
+          width: 300px;
+          margin-bottom: 0;
         }
 
         section {
-          width: 75%;
+          flex: 1;
         }
       }
     </style>
@@ -153,43 +261,68 @@
   <body>
     <header>
       <nav>
-        <h1>SatoChat</h1>
-        <img src="satochat.png" alt="SatoChat Logo" id="logo" />
-        <button id="theme-toggle">Switch to Dark Mode</button>
+        <div class="brand">
+          <h1>SatoChat</h1>
+          <img src="satochat.png" alt="SatoChat Logo" id="logo" />
+        </div>
+        <div class="controls">
+          <button id="theme-toggle">Switch to Dark Mode</button>
+        </div>
       </nav>
     </header>
 
     <main>
+      <div class="welcome-message">
+        <h2><i class="fas fa-shield-alt"></i> Welcome to SatoChat - Secure & Private Messaging</h2>
+        <p>This is a decentralized chat application with end-to-end encryption. Here's how to get started:</p>
+        <ol>
+          <li>Enter your username below</li>
+          <li>Join an existing room or create a new one</li>
+          <li>Share the room details with your contacts</li>
+          <li>Start chatting securely!</li>
+        </ol>
+      </div>
+
       <aside>
-        <h2>Rooms</h2>
-        <select id="previous-rooms-list">
-          <option value="0">Select a room...</option>
-          <!-- Options will be added dynamically -->
-        </select>
-        <button id="join-room">Join Room</button>
-        <button id="shareRoom">Share Room</button>
-        <button id="enableNotifications">Enable Notifications</button>
-        <label for="mute">Mute Notifications</label>
-        <input type="checkbox" id="mute" />
+        <h2><i class="fas fa-door-open"></i> Chat Rooms</h2>
+        <div class="room-controls">
+          <select id="previous-rooms-list">
+            <option value="0">Select a room...</option>
+          </select>
+          <button id="join-room"><i class="fas fa-sign-in-alt"></i> Join Room</button>
+          <button id="shareRoom"><i class="fas fa-share-alt"></i> Share Room</button>
+        </div>
+        
+        <div class="notification-controls">
+          <button id="enableNotifications"><i class="fas fa-bell"></i> Enable Notifications</button>
+          <label for="mute">
+            <i class="fas fa-volume-mute"></i> Mute
+            <input type="checkbox" id="mute" />
+          </label>
+        </div>
       </aside>
 
       <section>
-        <h1 id="currentRoom">Current Room</h1>
+        <h2 id="currentRoom"><i class="fas fa-comments"></i> Current Room</h2>
         <ul id="messages">
           <!-- Chat messages will be added here dynamically -->
         </ul>
         <form id="message-form">
-          <input id="username" type="text" placeholder="Username" />
-          <input id="room-name" type="text" placeholder="Room Name" />
-          <input id="input" type="text" placeholder="Type a message..." />
-          <button type="submit">Send</button>
+          <div class="input-group">
+            <input id="username" type="text" placeholder="Enter your username..." required />
+            <input id="room-name" type="text" placeholder="Enter room name..." required />
+          </div>
+          <div class="input-group">
+            <input id="input" type="text" placeholder="Type your message..." required />
+            <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+          </div>
         </form>
       </section>
     </main>
 
     <footer>
       <p>
-        Your Address: <span id="myAddress">Address will be displayed here</span>
+        Your Secure Address: <span id="myAddress">Loading...</span>
       </p>
     </footer>
 
